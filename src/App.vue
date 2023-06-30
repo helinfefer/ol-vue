@@ -1,17 +1,23 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <TopBar />
+    <hr>
+    <ToolsBar />
+    <ParentOfMapSlideBar/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ParentOfMapSlideBar from './components/ParentOfMapSlideBar.vue';
+import TopBar from './components/TopBar.vue';
+import ToolsBar from './components/ToolsBar.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    TopBar,
+    ToolsBar,
+    ParentOfMapSlideBar,
   }
 }
 </script>
@@ -23,6 +29,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 10px;
 }
 </style>
