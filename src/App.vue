@@ -4,6 +4,7 @@
     <hr>
     <ToolsBar />
     <ParentOfMapSlideBar/>
+    <router-view></router-view>
   </div>
 </template>
 

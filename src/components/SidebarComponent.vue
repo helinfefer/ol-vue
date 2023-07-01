@@ -9,10 +9,11 @@
         </p>
       </div>
       <b-list-group>
-        <b-list-group-item button>经开基础数据</b-list-group-item>
-        <b-list-group-item button>I am a button</b-list-group-item>
-        <b-list-group-item button >Disabled button</b-list-group-item>
-        <b-list-group-item button>This is a button too</b-list-group-item>
+        <b-list-group-item>Cras justo odio</b-list-group-item>
+        <b-list-group-item>Dapibus ac facilisis in</b-list-group-item>
+        <b-list-group-item>Morbi leo risus</b-list-group-item>
+        <b-list-group-item>Porta ac consectetur ac</b-list-group-item>
+        <b-list-group-item>Vestibulum at eros</b-list-group-item>
       </b-list-group>
     </b-sidebar>
   </div>
