@@ -1,21 +1,25 @@
 <template>
   <div>
-    <b-button v-b-toggle.sidebar-1>Toggle Sidebar</b-button>
-    <b-sidebar id="sidebar-1" title="Sidebar" bg-variant="light" text-variant="dark" :visible="true">
-      <div class="px-3 py-2">
-        <p>
-          Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-          in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        </p>
-      </div>
-      <b-list-group>
-        <b-list-group-item>Cras justo odio</b-list-group-item>
-        <b-list-group-item>Dapibus ac facilisis in</b-list-group-item>
-        <b-list-group-item>Morbi leo risus</b-list-group-item>
-        <b-list-group-item>Porta ac consectetur ac</b-list-group-item>
-        <b-list-group-item>Vestibulum at eros</b-list-group-item>
-      </b-list-group>
-    </b-sidebar>
+    <b-container class="bv-example-row">
+
+      <b-row  cols="4">
+        <b-col>
+          <b-button v-b-toggle.sidebar-1>Toggle Sidebar</b-button>
+          <b-sidebar id="sidebar-1" title="Sidebar" bg-variant="light" text-variant="dark"  no-close-on-route-change  width="200px">
+            <b-list-group>
+              <b-list-group-item active-class="active" to="/data">数据视图</b-list-group-item>
+              <b-list-group-item active-class="active" to="/map">地图</b-list-group-item>
+            </b-list-group>
+          </b-sidebar>
+        </b-col>
+
+        <b-col cols="9">
+          <router-view></router-view>
+        </b-col>
+
+      </b-row>
+
+    </b-container>
   </div>
 </template>
 
@@ -97,3 +101,4 @@
   },
   };
   </script> -->
+

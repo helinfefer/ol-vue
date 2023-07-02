@@ -2,23 +2,22 @@
   <div id="app">
     <TopBar />
     <hr>
-    <ToolsBar />
-    <ParentOfMapSlideBar/>
-    <router-view></router-view>
+    <!-- <ParentOfMapSlideBar/> -->
+    <SidebarComponent/>
+    <!-- 指定组件的呈现位置 -->
   </div>
 </template>
 
 <script>
-import ParentOfMapSlideBar from './components/ParentOfMapSlideBar.vue';
+// import ParentOfMapSlideBar from './components/ParentOfMapSlideBar.vue';
 import TopBar from './components/TopBar.vue';
-import ToolsBar from './components/ToolsBar.vue';
-
+import SidebarComponent from './components/SidebarComponent.vue';
 export default {
   name: 'App',
   components: {
     TopBar,
-    ToolsBar,
-    ParentOfMapSlideBar,
+    SidebarComponent
+    // ParentOfMapSlideBar,
   }
 }
 </script>
