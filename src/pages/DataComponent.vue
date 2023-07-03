@@ -10,6 +10,7 @@
     <p v-else>No data available.</p>
   </div> -->
   <div>
+    
     <b-list-group horizontal>
       <b-list-group-item active-class="active" to="/data/buildings">buildings</b-list-group-item>
       <b-list-group-item active-class="active" to="/data/parcels">parcels</b-list-group-item>

@@ -5,12 +5,19 @@
         <b-nav-item @click="changeDataSource('buildings')">buildings</b-nav-item>
         <b-nav-item @click="changeDataSource('parcels')">parcels</b-nav-item>
         <b-nav-item @click="changeDataSource('zoning')">zoning</b-nav-item>
-        <b-nav-item @click="changeDataSource('road')">road</b-nav-item>
+        <b-nav-item @click="changeDataSource('edges')">edges</b-nav-item>
       </b-nav>
       <!-- 给ToolsBar的Vc身上绑定一个事件 -->
       <!-- 给谁绑的事件，就去找谁触发去  -->
       <!-- 通过父组件给子组件绑定一个自定义事件，实现，子给父传递事件 -->
-      <ToolsBar v-on:changeCenter="getCenter"/>  
+      <ToolsBar 
+        v-on:changeCenter="getCenter"
+        v-on:clearMap="handleClearMap"
+        v-on:editorMap="handleEditorMap"
+        v-on:addPolygon="handleAddPolygon"
+        v-on:downLoad="handleDownLoad"
+        v-on:addStringLine ="handleAddStringLine"
+      />  
         
     </div>
 </template>
@@ -28,9 +35,8 @@
     import GeoJSON from 'ol/format/GeoJSON';
     import VectorLayer from 'ol/layer/Vector';
     import VectorSource from 'ol/source/Vector';
-
     import axios from 'axios'; //前后端消息发送
-
+    import {Draw, Modify}from 'ol/interaction';
 
     export default {
       name:'MapComponent',
@@ -39,15 +45,13 @@
         return {
           map: null,
           currentDataSource:null,
-          layers:{}
+          layers:{},
+          isEditing:false,
+          modifyInteraction:null,
+          clickCount2: 0,
         }
       },
       async mounted() {
-        // 请求数据
-       
-        // 获取geojson数据 
-        
-        // 设置地图 中心
         const center = [114.1692, 30.494]; // EPSG:4326
         const transformedCenter = transform(center, 'EPSG:4326', 'EPSG:3857');
         // 设置视图
@@ -72,6 +76,7 @@
           getCenter(newCenter){
               console.log('getcenter method triggered with center:', newCenter);
           },
+
           async changeDataSource(dataSource){
             console.log(this.currentDataSource);
 
@@ -80,7 +85,8 @@
             }
 
             if (!this.layers[dataSource]){
-              const response = await axios.get('http://localhost:5000/data/zoning');
+              console.log(dataSource)
+              const response = await axios.get(`http://localhost:5000/data/${dataSource}`);
               const geojsonData = response.data;
               console.log(geojsonData);
 
@@ -97,8 +103,85 @@
             // Finally, add the new layer and update the current data source
               this.map.addLayer(this.layers[dataSource]);
               this.currentDataSource = dataSource;
-          }
           },
+          // 清除功能
+          handleClearMap(){
+            console.log('handleClearMap')
+            for (let dataSource in this.layers) {
+              this.map.removeLayer(this.layers[dataSource]);
+            }
+            // Clear the layers object
+            this.layers = {};
+            // Reset the current data source
+            this.currentDataSource = null;
+          },
+
+          // 编辑功能
+          handleEditorMap(isEditingFromChild){
+            console.log('isEditing from ToolsBar:', isEditingFromChild);
+            console.log(this.isEditing)
+            if (!this.currentDataSource || !this.layers[this.currentDataSource]) {
+              alert('请首先选择一个有效的数据源！');
+              return;
+            }
+
+            this.isEditing = isEditingFromChild;
+
+            if (this.isEditing){
+              const sourceToEdit = this.layers[this.currentDataSource].getSource();
+              console.log(sourceToEdit)
+              this.modifyInteraction = new Modify({
+                source: sourceToEdit,
+              });
+              this.map.addInteraction(this.modifyInteraction);
+            }else{
+              this.map.removeInteraction(this.modifyInteraction);
+            }
+          },
+
+
+          // 添加polygon功能
+          handleAddPolygon() {
+            if (!this.currentDataSource || !this.layers[this.currentDataSource]) {
+              alert('请首先选择一个有效的数据源！');
+              return;
+            }
+
+            this.clickCount2++;
+            if (this.clickCount2 % 2 === 1){
+              this.drawInteraction = new Draw({
+                type:"Polygon",
+                source: this.layers[this.currentDataSource].getSource(), // 修改的是传入的 Geojson 数据；
+              });
+              this.map.addInteraction(this.drawInteraction);
+            } else {
+              this.map.removeInteraction(this.drawInteraction);
+            }
+          },
+
+          handleDownLoad(){
+            if (!this.currentDataSource || !this.layers[this.currentDataSource]) {
+              alert('请首先选择一个有效的数据源！');
+              return;
+            }
+
+            const format = new GeoJSON({featureProjection:'EPSG:4326'});
+            const sourceGeoJson = this.layers[this.currentDataSource].getSource();
+            const features = sourceGeoJson.getFeatures();
+            const json = format.writeFeatures(features);
+            const dataStr = 'data:application/json;charset=utf-8,' + encodeURIComponent(json);
+            // 创建一个下载链接并模拟点击操作以下载数据
+            let downloadLink = document.createElement('a');
+            downloadLink.href = dataStr;
+            downloadLink.download = 'features.json';
+            downloadLink.click();
+            downloadLink.remove();
+          },
+
+          handleAddStringLine(){
+
+          }
+        }
   }
 </script>
 
