@@ -16,7 +16,7 @@
         v-on:editorMap="handleEditorMap"
         v-on:addPolygon="handleAddPolygon"
         v-on:downLoad="handleDownLoad"
-        v-on:addStringLine ="handleAddStringLine"
+        v-on:addGeomery="handleAddGeomery"
       />  
         
     </div>
@@ -96,6 +96,7 @@
                   dataProjection: 'EPSG:4326',
                   featureProjection: 'EPSG:3857'
                 })});
+
               // 转为图层
               const vectorLayer = new VectorLayer({source: vectorSource})
               this.layers[dataSource] = vectorLayer;
@@ -119,7 +120,6 @@
           // 编辑功能
           handleEditorMap(isEditingFromChild){
             console.log('isEditing from ToolsBar:', isEditingFromChild);
-            console.log(this.isEditing)
             if (!this.currentDataSource || !this.layers[this.currentDataSource]) {
               alert('请首先选择一个有效的数据源！');
               return;
@@ -178,8 +178,23 @@
             downloadLink.remove();
           },
 
-          handleAddStringLine(){
+          addInteraction(geometryType,dealSource){
+            this.drawInteraction= new Draw({
+              type:geometryType,
+              source:dealSource})
+            this.map.addInteraction(this.drawInteraction)
+          },
 
+          handleAddGeomery(geometryType){
+            console.log('handleAddGeomery,Selected option:', geometryType);
+            console.log(this.currentDataSource)
+            // 当所在的source无时，则需要创建一个source
+            if(console.log(this.currentDataSource)===null){
+              dealSource = new VectorSource({wrapX: false});
+            }else{
+              dealSource = this.layers[this.currentDataSource].getSource()
+            }
+            this.addInteraction(geometryType,dealSource)
           }
         }
   }
