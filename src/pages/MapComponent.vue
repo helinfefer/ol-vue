@@ -178,24 +178,24 @@
             downloadLink.remove();
           },
 
-          addInteraction(geometryType,dealSource){
-            this.drawInteraction= new Draw({
-              type:geometryType,
-              source:dealSource})
-            this.map.addInteraction(this.drawInteraction)
-          },
+          // addInteraction(geometryType,dealSource){
+          //   this.drawInteraction= new Draw({
+          //     type:geometryType,
+          //     source:dealSource})
+          //   this.map.addInteraction(this.drawInteraction)
+          // },
 
-          handleAddGeomery(geometryType){
-            console.log('handleAddGeomery,Selected option:', geometryType);
-            console.log(this.currentDataSource)
-            // 当所在的source无时，则需要创建一个source
-            if(console.log(this.currentDataSource)===null){
-              dealSource = new VectorSource({wrapX: false});
-            }else{
-              dealSource = this.layers[this.currentDataSource].getSource()
-            }
-            this.addInteraction(geometryType,dealSource)
-          }
+          // handleAddGeomery(geometryType){
+            // console.log('handleAddGeomery,Selected option:', geometryType);
+            // console.log(this.currentDataSource)
+            // // 当所在的source无时，则需要创建一个source
+            // if(console.log(this.currentDataSource)===null){
+            //   dealSource = new VectorSource({wrapX: false});
+            // }else{
+            //   dealSource = this.layers[this.currentDataSource].getSource()
+            // }
+            // this.addInteraction(geometryType,dealSource)
+          // }
         }
   }
 </script>

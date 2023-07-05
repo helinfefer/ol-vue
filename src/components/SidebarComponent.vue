@@ -9,6 +9,8 @@
             <b-list-group>
               <b-list-group-item active-class="active" to="/data">数据视图</b-list-group-item>
               <b-list-group-item active-class="active" to="/map">地图</b-list-group-item>
+              <b-list-group-item active-class="active" to="/mmap"><Map>Mapbox</Map></b-list-group-item>
+
             </b-list-group>
           </b-sidebar>
         </b-col>
