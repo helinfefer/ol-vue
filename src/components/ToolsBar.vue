@@ -1,5 +1,5 @@
 <template>
-  <div id="tools">
+  <div id="tools" ref="toolsbar">
     <b-button-group >
       <b-button  id="changeCenter" @click="changeCenter">Change Center</b-button>
       <b-button id="download" @click="downLoad"  download="features.json">下载要素</b-button>
@@ -11,7 +11,7 @@
 
       <!-- 选择添加什么要素 -->
       <b-button disabled>Add Geometry type:</b-button>
-      <b-form-select v-model="selected" :options="options" @change="addGeomery"></b-form-select>
+      <b-form-select v-model="selected" :options="options" @change="addGeomery" ref="childRef"></b-form-select>
 
       <b-dropdown right text="编辑">
         <b-dropdown-item active-class="active" id="addPolygon" @click="addPolygon">添加Polygon</b-dropdown-item>
@@ -27,6 +27,7 @@
   <script>
   export default {
     name:"ToolsBar",
+    props: ['message'],
     data(){
       return{
         isEditing :false,
@@ -70,12 +71,16 @@
         this.$emit('addStringLine', this.isAddingLine); 
       },
       // 触发
-      addGeomery() {
+      addGeomery(){
         console.log('addGeomery method in ToolsBar component with selected option:', this.selected);
+        this.$emit('removeDrawInteraction'); // 新增的事件
         this.$emit('addGeomery', this.selected);
       }
 
 
+    },
+    mounted() {
+      console.log(this.message); 
     }
   }
   </script>

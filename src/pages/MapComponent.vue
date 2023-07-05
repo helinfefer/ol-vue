@@ -10,15 +10,16 @@
       <!-- 给ToolsBar的Vc身上绑定一个事件 -->
       <!-- 给谁绑的事件，就去找谁触发去  -->
       <!-- 通过父组件给子组件绑定一个自定义事件，实现，子给父传递事件 -->
-      <ToolsBar 
+      <ToolsBar ref = "toolsBarRef"
         v-on:changeCenter="getCenter"
         v-on:clearMap="handleClearMap"
         v-on:editorMap="handleEditorMap"
         v-on:addPolygon="handleAddPolygon"
         v-on:downLoad="handleDownLoad"
         v-on:addGeomery="handleAddGeomery"
+        v-on:removeDrawInteraction="removeDrawInteraction"
       />  
-        
+
     </div>
 </template>
 
@@ -31,7 +32,6 @@
     import View from 'ol/View.js';
     import OSM from 'ol/source/OSM';
     import TileLayer from 'ol/layer/Tile'
-    import {transform} from 'ol/proj';
     import GeoJSON from 'ol/format/GeoJSON';
     import VectorLayer from 'ol/layer/Vector';
     import VectorSource from 'ol/source/Vector';
@@ -49,15 +49,18 @@
           isEditing:false,
           modifyInteraction:null,
           clickCount2: 0,
+          currentGeometryType:null,//当前编辑的geometry 类型
+          geometryType:null //用户触发的,添加的geometry 类型
         }
       },
       async mounted() {
         const center = [114.1692, 30.494]; // EPSG:4326
-        const transformedCenter = transform(center, 'EPSG:4326', 'EPSG:3857');
+        // const transformedCenter = transform(center, 'EPSG:4326', 'EPSG:3857');
         // 设置视图
         const view = new View({
-          center: transformedCenter,
-          zoom: 13 
+          center: center,
+          zoom: 13 ,
+          projection:'EPSG:4326' //将基础视图的坐标改成4326
         });
         // 设置基础的底图
         const baseLayer = new TileLayer({
@@ -76,6 +79,11 @@
           getCenter(newCenter){
               console.log('getcenter method triggered with center:', newCenter);
           },
+          removeDrawInteraction(){
+            if (this.drawInteraction) {
+              this.map.removeInteraction(this.drawInteraction);
+              this.drawInteraction = null;
+          }},
 
           async changeDataSource(dataSource){
             console.log(this.currentDataSource);
@@ -92,11 +100,7 @@
 
               // 设置vectorSource
               const vectorSource = new VectorSource({
-                features: new GeoJSON().readFeatures(geojsonData,{
-                  dataProjection: 'EPSG:4326',
-                  featureProjection: 'EPSG:3857'
-                })});
-
+                features: new GeoJSON().readFeatures(geojsonData)});
               // 转为图层
               const vectorLayer = new VectorLayer({source: vectorSource})
               this.layers[dataSource] = vectorLayer;
@@ -115,6 +119,7 @@
             this.layers = {};
             // Reset the current data source
             this.currentDataSource = null;
+            console.log(this.$refs.toolsBarRef.selected = null)
           },
 
           // 编辑功能
@@ -129,7 +134,7 @@
 
             if (this.isEditing){
               const sourceToEdit = this.layers[this.currentDataSource].getSource();
-              console.log(sourceToEdit)
+              // console.log(sourceToEdit)
               this.modifyInteraction = new Modify({
                 source: sourceToEdit,
               });
@@ -173,29 +178,43 @@
             // 创建一个下载链接并模拟点击操作以下载数据
             let downloadLink = document.createElement('a');
             downloadLink.href = dataStr;
-            downloadLink.download = 'features.json';
+            downloadLink.download = 'features.geojson';
             downloadLink.click();
             downloadLink.remove();
           },
 
-          // addInteraction(geometryType,dealSource){
-          //   this.drawInteraction= new Draw({
-          //     type:geometryType,
-          //     source:dealSource})
-          //   this.map.addInteraction(this.drawInteraction)
-          // },
+          addInteraction(geometryType,dealSource){
+            this.drawInteraction= new Draw({
+              type:geometryType,
+              source:dealSource})
+            this.map.addInteraction(this.drawInteraction)
+          },
 
-          // handleAddGeomery(geometryType){
-            // console.log('handleAddGeomery,Selected option:', geometryType);
-            // console.log(this.currentDataSource)
-            // // 当所在的source无时，则需要创建一个source
-            // if(console.log(this.currentDataSource)===null){
-            //   dealSource = new VectorSource({wrapX: false});
-            // }else{
-            //   dealSource = this.layers[this.currentDataSource].getSource()
-            // }
-            // this.addInteraction(geometryType,dealSource)
-          // }
+          handleAddGeomery(geometryType){
+            this.geometryType = geometryType
+            console.log('handleAddGeomery,Selected option:', this.geometryType);
+            console.log('currentDataSource',this.currentDataSource)
+            let dealSource;
+              if(this.currentDataSource===null){
+                console.log('创建一个新的数据源')
+                // 创建一个空的geojson
+                // 使用特性来创建 VectorSource
+                dealSource = new VectorSource();
+
+                // 创建一个新的图层，并将它添加到地图和 this.layers 对象中
+                let newLayer = new VectorLayer({source: dealSource});
+                this.map.addLayer(newLayer);
+                this.currentDataSource = "newSource";
+                // add newLayer to this.layers
+                this.layers[this.currentDataSource] = newLayer;
+              }else{
+                dealSource = this.layers[this.currentDataSource].getSource()
+              }
+              // 移除旧的Draw交互
+              this.removeDrawInteraction();
+              this.addInteraction(this.geometryType,dealSource)
+          }
+
         }
   }
 </script>
