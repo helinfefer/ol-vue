@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="app">
     <!-- <TopBar /> -->
     <!-- <ParentOfMapSlideBar/> -->
     <!-- <SidebarComponent/> -->
@@ -9,6 +9,8 @@
 
     <!-- sidebar -->
     <SideBar/>
+
+    <br>
     <router-view ></router-view>
   </div>
 </template>
@@ -68,7 +70,7 @@ button {
 		flex: 1 1 0;
 		padding: 2rem;
 
-		@media (max-width: 700px) {
+		@media (max-width: 768px) {
 			padding-left: 6rem;
 		}
 	}

@@ -20,29 +20,3 @@
   }
 </script>
 
-<style scoped>
-
-.sidebar  {
-  top: 0;
-  bottom: 0; 
-  position: fixed;
-  z-index: 1000;  /* Ensure the sidebar is on top */
-  height: 100%;
-}
-
-
-.sidebar-button {
-  position: fixed;
-  left: 10px;  /* Adjust as needed */
-  z-index: 1001;  /* Ensure the button is on top of the sidebar */
-}
-
-.sidebar-button {
-  top:10px;
-  position: fixed;
-  z-index: 1001;  /* Ensure the button is on top of the sidebar */
-}
-.map {
-  top: 2.4em;
-}
-</style>
