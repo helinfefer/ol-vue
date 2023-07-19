@@ -82,7 +82,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .pagination-container {
   display: flex;
   justify-content: center;

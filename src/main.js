@@ -23,6 +23,8 @@ Vue.use(VueRouter);
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 
+import 'iview/dist/styles/iview.css';
+
 
 new Vue({
   router,

@@ -3,6 +3,9 @@ import VueRouter from 'vue-router';
 import DataComponent from '../pages/DataComponent.vue'
 import MapComponent from '../pages/MapComponent.vue'
 import MapMapbox from '../pages/MapMapbox.vue'
+import RunUms from '../pages/RunUms.vue'
+import HomePage from '../pages/HomePage.vue'
+
 // 创建一个路由器,并暴露一个路由器
 export default new VueRouter({
     routes :[
@@ -23,8 +26,15 @@ export default new VueRouter({
         {
             path:'/mmap',
             component: MapMapbox
+        },
+        {
+            path:'/ums',
+            component: RunUms
+        },
+        {
+            path:'/',
+            component: HomePage
         }
-
     ]
 })
 

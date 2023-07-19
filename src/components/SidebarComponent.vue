@@ -1,66 +1,18 @@
 <template>
-  <div>
-    <b-container class="bv-example-row">
+  <div id="main-map">
+    <b-button v-b-toggle.sidebar-1 class="sidebar-button" >工具栏</b-button>
+    <b-sidebar id="sidebar-1" title="Sidebar" bg-variant="light" text-variant="dark" no-close-on-route-change width="200px" class="sidebar">
+      <b-list-group>
+        <b-list-group-item active-class="active" to="/data">数据视图</b-list-group-item>
+        <b-list-group-item active-class="active" to="/map">地图</b-list-group-item>
+        <b-list-group-item active-class="active" to="/mmap"><Map>Mapbox</Map></b-list-group-item>
+        <b-list-group-item active-class="active" to="/ums"><Map>土地利用模型</Map></b-list-group-item>
+      </b-list-group>
+    </b-sidebar>
 
-      <b-row  cols="4">
-        <b-col>
-          <b-button v-b-toggle.sidebar-1>Toggle Sidebar</b-button>
-          <b-sidebar id="sidebar-1" title="Sidebar" bg-variant="light" text-variant="dark"  no-close-on-route-change  width="200px">
-            <b-list-group>
-              <b-list-group-item active-class="active" to="/data">数据视图</b-list-group-item>
-              <b-list-group-item active-class="active" to="/map">地图</b-list-group-item>
-              <b-list-group-item active-class="active" to="/mmap"><Map>Mapbox</Map></b-list-group-item>
-
-            </b-list-group>
-          </b-sidebar>
-        </b-col>
-
-        <b-col cols="9">
-          <router-view></router-view>
-        </b-col>
-
-      </b-row>
-
-    </b-container>
+    <!-- <router-view class="map"></router-view> -->
   </div>
 </template>
-
-<!-- <template> -->
-  <!-- <div> -->
-    <!-- <h2>数据目录</h2> -->
-    <!-- <b-form-group
-      label="选择目录"
-      v-slot="{ ariaDescribedby }"
-    >
-      <b-form-checkbox
-        v-for="(item, index) in catalog"
-        :key="index"
-        :value="item"
-        :aria-describedby="ariaDescribedby"
-        name="catalog"
-        v-model="selectedCatalogs"
-        @change="fetchData(item)"
-      >
-        {{ item }}
-      </b-form-checkbox>
-    </b-form-group>
-   -->
-  <!-- </div> -->
-  <!-- <div>
-    <b-sidebar id="sidebar" title="侧边导航栏" bg-variant="light" text-variant="dark">
-      <div class="px-3 py-2">
-        <p>欢迎来到我们的网站!</p>
-        <b-nav vertical class="mb-3">
-          <b-nav-item href="#base-data">基础数据</b-nav-item>
-          <b-nav-item href="#geographical-data-display">地理数据展示</b-nav-item>
-          <b-nav-item href="#project-introduction">项目介绍</b-nav-item>
-          <b-nav-item href="#land-use-model">土地利用模型</b-nav-item>
-        </b-nav>
-      </div>
-    </b-sidebar>
-  </div>
-  
-</template> -->
 
 <script>
   export default {
@@ -68,39 +20,29 @@
   }
 </script>
 
+<style scoped>
 
-  <!-- <script>
-  import axios from 'axios'; // axios处理请求
-  export default {
-    data() {
-      return {
-        catalog: ['stop_bus', 'parcels', 'households', 'jobs'],
-        selectedCatalogs: []
-      };
-    },
-    methods: {
-    async fetchData(item) {
-      console.log(`fetchData called with item: ${item}`);
-      console.log(`selectedCatalogs: ${this.selectedCatalogs}`);
-      
-      const isIncluded = this.selectedCatalogs.includes(item);
-      console.log(`Is item in selectedCatalogs: ${isIncluded}`);
-      
-      if (isIncluded) {
-        console.log(`Sending request to: http://127.0.0.1:5000/api/data/${item}`);
-        
-        try {
-          const response = await axios.get(`http://127.0.0.1:5000/api/data/${item}`);
-          console.log(response.data);
-          this.$router.push('/${item}', response);
-        } catch (error) {
-          console.error(`Error fetching data: ${error}`);
-        }
-      }
-      
-      console.log(`fetchData ended with item: ${item}`);
-    },
-  },
-  };
-  </script> -->
+.sidebar  {
+  top: 0;
+  bottom: 0; 
+  position: fixed;
+  z-index: 1000;  /* Ensure the sidebar is on top */
+  height: 100%;
+}
 
+
+.sidebar-button {
+  position: fixed;
+  left: 10px;  /* Adjust as needed */
+  z-index: 1001;  /* Ensure the button is on top of the sidebar */
+}
+
+.sidebar-button {
+  top:10px;
+  position: fixed;
+  z-index: 1001;  /* Ensure the button is on top of the sidebar */
+}
+.map {
+  top: 2.4em;
+}
+</style>
