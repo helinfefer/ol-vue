@@ -1,40 +1,65 @@
-// 该文件专门用于创建整个应用的路由器
 import VueRouter from 'vue-router';
 import DataComponent from '../pages/DataComponent.vue'
 import MapComponent from '../pages/MapComponent.vue'
 import MapMapbox from '../pages/MapMapbox.vue'
 import RunUms from '../pages/RunUms.vue'
 import HomePage from '../pages/HomePage.vue'
+import AboutPage from '../pages/AboutPage.vue'
+import TableComponent from '../pages/TableComponent.vue'
+import TransitionModel from '../pages/TransitionModel.vue'
+import RelocationModel from '../pages/RelocationModel.vue'
+import SetArgument from '../pages/SetArgument.vue'
+import InputArgument from '../pages/InputArgument.vue'
 
-// 创建一个路由器,并暴露一个路由器
 export default new VueRouter({
-    routes :[
+    routes: [
         {
             path : '/data',
             component : DataComponent,
-            // children:[
-            //     {
-            //         path:'buildings',
-            //         component : DataBuildings
-            //     }
-            // ]
         },
         {
-            path : '/map',
-            component  : MapComponent
+            path : '/openlayers',
+            component: MapComponent
         },
         {
-            path:'/mmap',
+            path: '/mapbox',
             component: MapMapbox
         },
         {
             path:'/ums',
-            component: RunUms
+            component: RunUms,
+            children:[
+                {
+                    path:'tansitionmodel',
+                    component:TransitionModel
+                },
+                {
+                    path:'relocation',
+                    component:RelocationModel
+                },
+                {
+                    path:'SetArgument',
+                    component:SetArgument,
+                    children:[
+                        {
+                            path:'userinput',
+                            component:InputArgument
+                        }
+                    ]
+                }
+            ]
         },
         {
             path:'/',
             component: HomePage
+        },
+        {
+            path: '/about',
+            component:AboutPage
+        },
+        {
+            path:'/table',
+            TableComponent
         }
     ]
 })
-

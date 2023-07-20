@@ -1,208 +1,111 @@
 <!-- sidebar -->
 <template >
-    <aside :class="`${is_expanded ? 'is-expanded' : ''}`">
-        <div class="logo">
-            <img src="../assets/logo.png" alt="Vue">
-        </div>
-        <div class="menu-toggle-wrap">
-            <button class="menu-toggle" @click="ToggleMenu">
-                <span class="material-icons">double_arrow</span>
-            </button>
-        </div>
-        <h3>Menu</h3>
-		<div class="menu">
-			<router-link to="/" class="button">
-				<span class="material-icons">home</span>
-				<span class="text">Home</span>
-			</router-link>
+    <div>
+        <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
+            <el-radio-button :label="false">展开</el-radio-button>
+            <el-radio-button :label="true">收起</el-radio-button>
+          </el-radio-group>
 
-			<router-link to="/map" class="button">
-                <span class="material-icons">map</span>
-                <span class="text">Map</span>
-			</router-link>
+          <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse" router:default-active="$route.path">
+            <el-submenu index="1">
+              <template slot="title">
+                <i class="el-icon-location"></i>
+                <span slot="title">数据视图</span>
+              </template>
+              <el-menu-item-group>
+                <span slot="title">map</span>
+                <el-menu-item index="1-1">
+                  <router-link to="/openlayers">openlayers</router-link>
+                </el-menu-item>
+                <el-menu-item index="1-2">
+                  <router-link to="/mapbox">mapbox</router-link>
+                </el-menu-item>
+              </el-menu-item-group>
 
-			<router-link to="/data" class="button">
-				<span class="material-icons">table_view</span>
-				<span class="text">Table</span>
-			</router-link>
+              <el-menu-item-group title="基础数据">
+                <el-menu-item index="1-3">
+                    <router-link to="/data">data</router-link>
+                </el-menu-item>
+              </el-menu-item-group>
 
-			<router-link to="/map" class="button">
-				<span class="material-icons">edit_road</span>
-				<span class="text">Edit</span>
-			</router-link>
 
-            <router-link to="/ums" class="button">
-				<span class="material-icons">location_city</span>
-				<span class="text">UMS</span>
-			</router-link>
+            </el-submenu>
 
-		</div>
-    </aside>
+            <el-submenu index="2">
+                <template slot="title">
+                    <i class="el-icon-menu"></i>    
+                    <span slot="title">UMS</span>
+                </template>
+
+                <span slot="title">土地利用模型</span>
+
+                <el-submenu index="2-1">
+                    <span slot="title">土地利用模型</span>
+                    <el-menu-item index="2-1-1">
+                        <router-link to="/ums/SetArgument">参数设置</router-link>
+                    </el-menu-item>
+
+                    <el-menu-item index="2-1-1">
+                        <router-link to="/ums/tansitionmodel">转移模型</router-link>
+                    </el-menu-item>
+                    <el-menu-item index="2-1-2">
+                        <router-link to="/ums/relocation">迁移模型</router-link>
+                    </el-menu-item>
+                    <el-menu-item index="2-1-3">区位选择模型</el-menu-item>
+                    <el-menu-item index="2-1-4">开发商模型</el-menu-item>
+                    <el-menu-item index="2-1-5">统计分析</el-menu-item>
+                </el-submenu>
+
+                <el-submenu index="2-2">
+                    <span slot="title">交通需求模型</span>
+                    <el-menu-item index="2-2-1">出行产生</el-menu-item>
+                    <el-menu-item index="2-2-2">出行产生</el-menu-item>
+                    <el-menu-item index="2-2-3">出行产生</el-menu-item>
+                    <el-menu-item index="2-2-4">出行产生</el-menu-item>
+                </el-submenu>
+                <el-menu-item-group title="地块划分">
+                    <el-menu-item index="2-3">地块自动划分</el-menu-item>
+                    <el-menu-item index="2-4">xx</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+
+            <el-menu-item index="3" >
+              <i class="el-icon-document"></i>
+              <span slot="title">
+                <router-link to="/about">说明文档</router-link>
+              </span>
+            </el-menu-item>
+
+            <el-menu-item index="4">
+              <i class="el-icon-setting"></i>
+              <span slot="title">导航四</span>
+            </el-menu-item>
+          </el-menu>
+    </div>
 </template>
 
-<script >
-export default {
-    data(){
-        return {
-            is_expanded: localStorage.getItem("is_expanded") === "true"
-        }
+<script>
+  export default {
+    data() {
+      return {
+        isCollapse: false,
+      };
     },
-    name:'SideBar',
-    methods:{
-        ToggleMenu(){
-            console.log(this.is_expanded)
-            this.is_expanded = !this.is_expanded
-            localStorage.setItem("is_expanded", this.is_expanded)
-        }
+    methods: {
+      handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
+      }
     }
-}
+  }
 </script>
 
 
-<style lang="scss" scoped>
-aside {
-	display: flex;
-	flex-direction: column;
-
-	background-color: var(--dark);
-	color: var(--light);
-
-	width: calc(2rem + 32px);
-	overflow: hidden;
-	min-height: 100vh;
-	padding: 1rem;
-
-	transition: 0.2s ease-in-out;
-
-	.flex {
-		flex: 1 1 0%;
-	}
-
-	.logo {
-		margin-bottom: 1rem;
-
-		img {
-			width: 2rem;
-		}
-	}
-
-	.menu-toggle-wrap {
-		display: flex;
-		justify-content: flex-end;
-		margin-bottom: 1rem;
-
-		position: relative;
-		top: 0;
-		transition: 0.2s ease-in-out;
-
-		.menu-toggle {
-			transition: 0.2s ease-in-out;
-			.material-icons {
-				font-size: 2rem;
-				color: var(--light);
-				transition: 0.2s ease-out;
-			}
-			
-			&:hover {
-				.material-icons {
-					color: var(--primary);
-					transform: translateX(0.5rem);
-				}
-			}
-		}
-	}
-
-	h3, .button .text {
-		opacity: 0;
-		transition: opacity 0.3s ease-in-out;
-	}
-
-	h3 {
-		color: var(--grey);
-		font-size: 0.875rem;
-		margin-bottom: 0.5rem;
-		text-transform: uppercase;
-	}
-
-	.menu {
-		margin: 0 -1rem;
-
-		.button {
-			display: flex;
-			align-items: center;
-			text-decoration: none;
-
-			transition: 0.2s ease-in-out;
-			padding: 0.5rem 1rem;
-
-			.material-icons {
-				font-size: 2rem;
-				color: var(--light);
-				transition: 0.2s ease-in-out;
-			}
-			.text {
-				color: var(--light);
-				transition: 0.2s ease-in-out;
-			}
-
-			&:hover {
-				background-color: var(--dark-alt);
-
-				.material-icons, .text {
-					color: var(--primary);
-				}
-			}
-
-			&.router-link-exact-active {
-				background-color: var(--dark-alt);
-				border-right: 5px solid var(--primary);
-
-				.material-icons, .text {
-					color: var(--primary);
-				}
-			}
-		}
-	}
-
-	.footer {
-		opacity: 0;
-		transition: opacity 0.3s ease-in-out;
-
-		p {
-			font-size: 0.875rem;
-			color: var(--grey);
-		}
-	}
-
-	&.is-expanded {
-		width: var(--sidebar-width);
-
-		.menu-toggle-wrap {
-			top: -3rem;
-			
-			.menu-toggle {
-				transform: rotate(-180deg);
-			}
-		}
-
-		h3, .button .text {
-			opacity: 1;
-		}
-
-		.button {
-			.material-icons {
-				margin-right: 1rem;
-			}
-		}
-
-		.footer {
-			opacity: 0;
-		}
-	}
-
-	@media (max-width: 1024px) {
-		position: absolute;
-		z-index: 99;
-	}
-}
+<style>
+  .el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
+  }
 </style>
