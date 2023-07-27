@@ -66,6 +66,7 @@ export default {
         const response = await axios.get(`http://localhost:5000/data/${dataset}`);
         this.data = response.data
         console.log(this.data)
+        console.log(typeof this.data)
         this.currentPage = 1; // Reset to first page when new data is fetched
       } catch (error) {
         console.error('Failed to fetch data:', error);

@@ -5,12 +5,13 @@ import MapMapbox from '../pages/MapMapbox.vue'
 import RunUms from '../pages/RunUms.vue'
 import HomePage from '../pages/HomePage.vue'
 import AboutPage from '../pages/AboutPage.vue'
+import LcmComponent from '../pages/LcmComponent.vue'
 import TableComponent from '../pages/TableComponent.vue'
 import TransitionModel from '../pages/TransitionModel.vue'
 import RelocationModel from '../pages/RelocationModel.vue'
 import SetArgument from '../pages/SetArgument.vue'
 import InputArgument from '../pages/InputArgument.vue'
-
+import DeveloperComponent from '../pages/DeveloperComponent.vue'
 export default new VueRouter({
     routes: [
         {
@@ -46,6 +47,14 @@ export default new VueRouter({
                             component:InputArgument
                         }
                     ]
+                },
+                {
+                    path:'lcm',
+                    component:LcmComponent
+                },
+                {
+                    path:'developer',
+                    component:DeveloperComponent
                 }
             ]
         },

@@ -51,21 +51,24 @@
                     <el-menu-item index="2-1-2">
                         <router-link to="/ums/relocation">迁移模型</router-link>
                     </el-menu-item>
-                    <el-menu-item index="2-1-3">区位选择模型</el-menu-item>
-                    <el-menu-item index="2-1-4">开发商模型</el-menu-item>
+                    <el-menu-item index="2-1-3">
+                      <router-link to="/ums/lcm">区位选择模型</router-link>
+                    </el-menu-item>
+                    <el-menu-item index="2-1-4">
+                      <router-link to="/ums/developer">开发商模型</router-link>
+                    </el-menu-item>
                     <el-menu-item index="2-1-5">统计分析</el-menu-item>
                 </el-submenu>
 
                 <el-submenu index="2-2">
                     <span slot="title">交通需求模型</span>
-                    <el-menu-item index="2-2-1">出行产生</el-menu-item>
-                    <el-menu-item index="2-2-2">出行产生</el-menu-item>
-                    <el-menu-item index="2-2-3">出行产生</el-menu-item>
-                    <el-menu-item index="2-2-4">出行产生</el-menu-item>
+                    <el-menu-item index="2-2-1">交通生成</el-menu-item>
+                    <el-menu-item index="2-2-2">交通分布</el-menu-item>
+                    <el-menu-item index="2-2-3">交通方式划分</el-menu-item>
+                    <el-menu-item index="2-2-4">交通量分配</el-menu-item>
                 </el-submenu>
                 <el-menu-item-group title="地块划分">
                     <el-menu-item index="2-3">地块自动划分</el-menu-item>
-                    <el-menu-item index="2-4">xx</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
 

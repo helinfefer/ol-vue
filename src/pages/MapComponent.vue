@@ -1,6 +1,5 @@
 <!--  -->
 <template >
-  <div>
     <div ref="map-root" class="map-container">
       <b-nav tabs>
         <b-nav-item @click="changeDataSource('buildings')">buildings</b-nav-item>
@@ -21,15 +20,12 @@
         v-on:removeDrawInteraction="removeDrawInteraction"
       />  
     </div>
-    <DataComponent/>
-  </div>
 
 </template>
 
 <script>
     // 引入编辑子组件
     import ToolsBar from '../components/ToolsBar.vue';
-    import DataComponent from './DataComponent.vue';
     import 'ol/ol.css'
     import Map from 'ol/Map.js';
     import View from 'ol/View.js';
@@ -43,7 +39,7 @@
 
     export default {
       name:'MapComponent',
-      components:{ToolsBar,DataComponent},
+      components:{ToolsBar},
       data(){
         return {
           map: null,
