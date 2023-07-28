@@ -13,7 +13,8 @@
         <br>
         <span>{{msgELCM }}</span>
       </el-tab-pane>
-      <TableComponent :dataFromParent="plotData"/>
+      <TableComponent v-if="plotData" :dataFromParent="plotData"/> 
+      <!-- v-if plotData，是为了保证只有在plotData在非null值时才渲染元素 -->
 
     </el-tabs>
   </template>
@@ -27,6 +28,7 @@ import TableComponent from '../pages/TableComponent.vue'
             householdsTable:null,
             msgHLCM :null,
             msgELCM:null,
+            plotData:null,
         };
     },
     methods: {

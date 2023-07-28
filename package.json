@@ -17,25 +17,25 @@
     "iview": "^3.5.4",
     "leaflet": "^1.9.4",
     "mapbox-gl": "^0.53.1",
-    "marked": "^5.1.2",
     "ol": "^7.4.0",
     "portal-vue": "^2.1.7",
+    "sass-loader": "^13.3.2",
     "vue": "^2.6.14",
     "vue-mapbox": "^0.4.1",
     "vue-router": "^3.6.5",
     "vue-template-compiler": "^2.6.14",
+    "vue2-leaflet": "^2.7.1",
     "vuejs-paginate": "^2.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@types/mapbox-gl": "^2.7.12",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
-    "sass": "^1.63.6",
-    "sass-loader": "^13.3.2",
     "vuepress-plugin-auto-sidebar": "^2.3.2"
   },
   "eslintConfig": {
