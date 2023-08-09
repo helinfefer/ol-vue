@@ -17,6 +17,8 @@
     import VectorSource from 'ol/source/Vector';
     import { Fill,Stroke,Style } from 'ol/style';
     import LayerSwitcher from 'ol-layerswitcher';
+    // 引用popup
+    import Popup from 'ol-popup'; 
     export default {
       name:'MapOl',
       props: {
@@ -27,15 +29,36 @@
         feasibilityData:{
           type: Object,
           default: () => ({})
-        }
+        },
+        developerData:{
+          type: Object,
+          default: () => ({})
+        },
+        // developer_form: {
+        //   type: String,
+        //   default: () => ("default")
+        // },
+        developerDataMerge:{
+          type: Object,
+          default: () => ({
+            "developerData":{},
+            "developer_form": "default"
+          })
+        },
+
     },
       data(){
         return {
           map: null,
           layers:{},
+          vectorSource:null,
+          vectorLayer:null,
+          layerSwitcher:null,
+          popup:null,
         }
       },
       async mounted() {
+        
         const center = [114.1692, 30.494]; // EPSG:4326
         // const transformedCenter = transform(center, 'EPSG:4326', 'EPSG:3857');
         // 设置视图
@@ -57,8 +80,35 @@
             view: view
         });
 
+        // console.log("feasibilityData:",this.feasibilityData)
+          // 根据传入的props更新图层
+        // this.updateGeojsonLayer();
+        // this.updateFeasibilityLayer();
+
+          // 创建 Popup 实例
+
+        this.popup = new Popup();
+        this.map.addOverlay(this.popup);
+              
+        // 添加点击事件监听器
+        this.map.on('singleclick', (evt) => {
+          const feature = this.map.forEachFeatureAtPixel(evt.pixel, (feature) => feature);
+          if (feature) {
+            const coordinates = evt.coordinate;
+            const content = this.getFeatureProperties(feature); // 获取要素属性的自定义函数
+            this.popup.show(coordinates, content);
+          } else {
+            this.popup.hide();
+          }
+        });
+    },
+    // 监听
+    methods:{
+      updateGeojsonLayer() {
+        console.log('更新图层,updateGeojsonLayer')
+        
       // 默认的地块数据源
-        const vectorSource = new VectorSource({
+      this.vectorSource = new VectorSource({
             // features: new GeoJSON().readFeatures(this.geojsonData)
             format: new GeoJSON(),
             url:'div_parcels.geojson'   //! ***********
@@ -76,8 +126,8 @@
         };
 
         // console.log("popnum",this.geojsonData[54]) 
-        const vectorLayer = new VectorLayer({
-            source: vectorSource,
+        this.vectorLayer = new VectorLayer({
+            source: this.vectorSource,
             style: (feature) => {
                 const parcelId = feature.get('parcel_id').toString();
                 const popnum = this.geojsonData[parcelId];
@@ -95,24 +145,132 @@
               },
             title:'parcel'
         });
-        this.map.addLayer(vectorLayer);
+        this.map.addLayer(this.vectorLayer);
         
         // Create a LayerSwitcher instance and add it to the map
-        const layerSwitcher = new LayerSwitcher({
+        this.layerSwitcher = new LayerSwitcher({
           tipLabel: 'Legend', // Optional label for button
         });
-        this.map.addControl(layerSwitcher);
-
-    },
-    // 监听
-    methods:{
-      updateGeojsonLayer() {
-        console.log('更新图层')
+        this.map.addControl(this.layerSwitcher);
+        
       },
       updateFeasibilityLayer() {
         console.log('更新图层,updateFeasibilityLayer')
         
+      // 默认的地块数据源
+      this.vectorSource = new VectorSource({
+            // features: new GeoJSON().readFeatures(this.geojsonData)
+            format: new GeoJSON(),
+            url:'div_parcels.geojson'  
+        });
+
+        const getColorFromFeasibility = (feasibilityValue) => {
+            const alpha = 0.4;
+            if (feasibilityValue !== undefined && feasibilityValue.toString() === "1") {
+              // console.log('被允许开发')
+              return `rgba(174, 0, 0, ${alpha})`; // red
+            }
+
+            return `rgba(27, 27, 27, ${alpha})`; // green
+        };
+
+        this.vectorLayer = new VectorLayer({
+            source: this.vectorSource,
+            style: (feature) => {
+                const parcelId = feature.get('parcel_id').toString();
+                const feasibilityValue = this.feasibilityData[parcelId];
+                // console.log("feasibilityValue:",feasibilityValue)
+                const color = getColorFromFeasibility(feasibilityValue);
+                return new Style({
+                    fill: new Fill({
+                        color: color,// 使用num值来确定颜色
+                    }),
+                    stroke: new Stroke({
+                      color:'grey',
+                      width:1
+                    })
+                });
+              },
+            title:'feasibility'
+        });
+        this.map.addLayer(this.vectorLayer);
+        
+        // Create a LayerSwitcher instance and add it to the map
+        this.layerSwitcher = new LayerSwitcher({
+          tipLabel: 'Legend', // Optional label for button
+        });
+        this.map.addControl(this.layerSwitcher);
+
+        
       },
+      updateDeveloperLayer(){
+        console.log("updateDeveloperLayer")
+        // 默认的地块数据源
+        this.vectorSource = new VectorSource({
+              // features: new GeoJSON().readFeatures(this.geojsonData)
+              format: new GeoJSON(),
+              url:'div_parcels.geojson'  
+          });
+
+          const getColorFromDeveloper = (BedeveloperedValue) => {
+              const alpha = 0.8;
+              if (BedeveloperedValue !== undefined && BedeveloperedValue.toString() === "1") {
+                // console.log(this.developerDataMerge['developer_form'])
+                if (this.developerDataMerge['developer_form'] === "residential"){
+                  return `rgba(253, 255, 0, ${alpha})`
+                }else if (this.developerDataMerge['developer_form'] === "office"){
+                  return `rgba(96, 129, 200, ${alpha})`
+                }else if (this.developerDataMerge['developer_form'] === "retail"){
+                  return `rgba(174, 181, 222, ${alpha})`
+                }else if (this.developerDataMerge['developer_form']=="industrial"){
+                  return `rgba(134, 79, 46, ${alpha})`
+                }
+              }
+
+              return `rgba(27, 27, 27, ${alpha})`; // green
+          };
+
+          this.vectorLayer = new VectorLayer({
+              source: this.vectorSource,
+              style: (feature) => {
+                // console.log("developer_form:",this.developerDataMerge['developer_form'])
+                  const parcelId = feature.get('parcel_id').toString();
+                  const BedeveloperedValue = this.developerDataMerge['developerData'][parcelId];
+                  const color = getColorFromDeveloper(BedeveloperedValue);
+                  return new Style({
+                      fill: new Fill({
+                          color: color,// 使用num值来确定颜色
+                      }),
+                      stroke: new Stroke({
+                        color:'grey',
+                        width:1
+                      })
+                  });
+                },
+              title:this.developerDataMerge['developer_form']
+          });
+          this.map.addLayer(this.vectorLayer);
+          
+          // Create a LayerSwitcher instance and add it to the map
+          this.layerSwitcher = new LayerSwitcher({
+            tipLabel: 'Legend', // Optional label for button
+          });
+          this.map.addControl(this.layerSwitcher);
+
+        
+      },
+      
+      getFeatureProperties(feature) {
+        // 获取要素属性并格式化为 HTML
+        const properties = feature.getProperties();
+        let content = '<h3>Properties:</h3><ul>';
+        for (const key in properties) {
+          content += `<li>${key}: ${properties[key]}</li>`;
+        }
+        content += '</ul>';
+        return content;
+      }
+      
     },
     watch: {
       geojsonData: {
@@ -122,11 +280,12 @@
       feasibilityData: {
         handler: 'updateFeasibilityLayer',
         deep: true
-      }
+      },
+      developerDataMerge:{
+        handler: 'updateDeveloperLayer',
+        deep: false,
+      },
     }
-
-
-    
 
 
   }
@@ -136,5 +295,8 @@
 .map-container {
   height: 700px;
   width: 100%;
+}
+.ol-popup-content {
+  background: rgba(72, 72, 72,0.9); /* 设置背景颜色和透明度 */
 }
 </style>
