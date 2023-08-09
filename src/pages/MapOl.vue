@@ -16,15 +16,18 @@
     import VectorLayer from 'ol/layer/Vector';
     import VectorSource from 'ol/source/Vector';
     import { Fill,Stroke,Style } from 'ol/style';
-
+    import LayerSwitcher from 'ol-layerswitcher';
     export default {
       name:'MapOl',
       props: {
         geojsonData: {
           type: Object,
-          default: () => ({
-          })
-  }
+          default: () => ({})
+        },
+        feasibilityData:{
+          type: Object,
+          default: () => ({})
+        }
     },
       data(){
         return {
@@ -54,6 +57,7 @@
             view: view
         });
 
+      // 默认的地块数据源
         const vectorSource = new VectorSource({
             // features: new GeoJSON().readFeatures(this.geojsonData)
             format: new GeoJSON(),
@@ -61,7 +65,7 @@
         });
 
         const getColorFromNum = (popnum) => {
-            const alpha = 0.6;
+            const alpha = 0.4;
             if (popnum > 20000) return `rgba(48, 123, 235, ${alpha})`; // red
             if (popnum > 5000) return `rgba(84, 142, 240, ${alpha})`; // orange
             if (popnum > 2000) return `rgba(121, 165, 245, ${alpha})`; // orange
@@ -88,11 +92,41 @@
                       width:1
                     })
                 });
-              }
+              },
+            title:'parcel'
         });
         this.map.addLayer(vectorLayer);
+        
+        // Create a LayerSwitcher instance and add it to the map
+        const layerSwitcher = new LayerSwitcher({
+          tipLabel: 'Legend', // Optional label for button
+        });
+        this.map.addControl(layerSwitcher);
 
+    },
+    // 监听
+    methods:{
+      updateGeojsonLayer() {
+        console.log('更新图层')
+      },
+      updateFeasibilityLayer() {
+        console.log('更新图层,updateFeasibilityLayer')
+        
+      },
+    },
+    watch: {
+      geojsonData: {
+        handler: 'updateGeojsonLayer',   //updateGeojsonLayer 写在methods中
+        deep: true
+      },
+      feasibilityData: {
+        handler: 'updateFeasibilityLayer',
+        deep: true
+      }
     }
+
+
+    
 
 
   }
