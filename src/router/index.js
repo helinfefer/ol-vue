@@ -12,6 +12,10 @@ import RelocationModel from '../pages/RelocationModel.vue'
 import SetArgument from '../pages/SetArgument.vue'
 import InputArgument from '../pages/InputArgument.vue'
 import DeveloperComponent from '../pages/DeveloperComponent.vue'
+import MapOl from '../pages/MapOl.vue'
+import MapOlLcm from '../pages/MapOlLcm.vue'
+import MapOlFeasibility from '../pages/MapOlFeasibility.vue'
+import TwoLayerIndex from '../pages/TwoLayerIndex.vue'
 export default new VueRouter({
     routes: [
         {
@@ -22,6 +26,19 @@ export default new VueRouter({
             path : '/openlayers',
             component: MapComponent
         },
+        {
+            path:'ol',
+            component: MapOl
+        },
+        {
+            path:'ollcm',
+            component: MapOlLcm
+        },
+        {
+            path:'feasibility',
+            component: MapOlFeasibility
+        },
+        
         {
             path: '/mapbox',
             component: MapMapbox
@@ -55,9 +72,15 @@ export default new VueRouter({
                 {
                     path:'developer',
                     component:DeveloperComponent
-                }
+                },
+
             ]
         },
+        {
+            path:'/calcindex',
+            component:TwoLayerIndex
+        },
+
         {
             path:'/',
             component: HomePage

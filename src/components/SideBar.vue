@@ -54,10 +54,10 @@
                     <el-menu-item index="2-1-3">
                       <router-link to="/ums/lcm">区位选择模型</router-link>
                     </el-menu-item>
+
                     <el-menu-item index="2-1-4">
                       <router-link to="/ums/developer">开发商模型</router-link>
                     </el-menu-item>
-                    <el-menu-item index="2-1-5">统计分析</el-menu-item>
                 </el-submenu>
 
                 <el-submenu index="2-2">
@@ -67,6 +67,17 @@
                     <el-menu-item index="2-2-3">交通方式划分</el-menu-item>
                     <el-menu-item index="2-2-4">交通量分配</el-menu-item>
                 </el-submenu>
+
+                <el-submenu index="2-4">
+                  <span slot="title">双层反馈</span>
+                  <el-menu-item index="2-4-1">
+                    <router-link to="/calcindex">相关指标</router-link>
+                  </el-menu-item>
+                  <el-menu-item index="2-4-2">
+                    <router-link to="/calcndex">指标计算</router-link>
+                  </el-menu-item>
+              </el-submenu>
+
                 <el-menu-item-group title="地块划分">
                     <el-menu-item index="2-3">地块自动划分</el-menu-item>
                 </el-menu-item-group>
