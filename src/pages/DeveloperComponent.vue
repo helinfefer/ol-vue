@@ -99,13 +99,6 @@
         runResidentialDeveloper(){
           this.developer_form = "residential"
           console.log("居住 - 开发商模型");
-          // this.developerData = {
-          //   "45": 1,
-          //   "60":0,
-          //   "75":1,
-          //   "555":1,
-
-          // };
           axios.post('http://localhost:5000/run/residential_developer').then(response =>{
                 // 处理响应
                 this.householdsTable = JSON.parse(response.data.data);
