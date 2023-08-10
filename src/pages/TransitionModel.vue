@@ -1,33 +1,38 @@
 <!--  -->
 <template >
-  <div>
-    <el-tabs v-model="activeName" @tab-click="handleClick"
+    <el-tabs v-model="activeName" type="card"  @tab-click="handleClick"
     class="my-tabs">
       <el-tab-pane label="转移模型" name="first">
         <el-button type="primary" @click="runHTransition">运行家庭转移模型</el-button>
         <el-button type="primary" @click="runETransition">运行就业转移模型</el-button>
+        <el-button type="primary" @click="orcaBack">清除缓存</el-button>
         <br>
         <span>{{ msg }}</span>
         <TableComponent v-if="plotData" :dataFromParent="plotData"/>
         <!-- <span>{{householdsTable}}</span> -->
 
-        <TableComponent v-if="plotData" :dataFromParent="plotData"/> 
+        <!-- <TableComponent v-if="plotData" :dataFromParent="plotData"/>  -->
         <!-- v-if plotData，是为了保证只有在plotData在非null值时才渲染元素 -->
-        <MapMapbox :geojsonData="geojsonData"></MapMapbox>
+        
     </el-tab-pane>
 
-      <el-tab-pane label="结果可视化" name="second">
-      </el-tab-pane>
+    <!-- <el-tab-pane label="结果可视化" name="second">
+      <MapMapbox :geojsonData="geojsonData"></MapMapbox>
+    </el-tab-pane> -->
+    <el-tab-pane label="结果可视化" name="second">
+      <MapOl :geojsonData="geojsonData"></MapOl>
+    </el-tab-pane>
+
 
     </el-tabs >
 
 
-  </div>
-
 </template>
 <script>
 import TableComponent from '../pages/TableComponent.vue'
-import MapMapbox from './MapMapbox.vue';
+
+// import MapMapbox from './MapMapbox.vue';
+import MapOl from './MapOl.vue';
 import axios from 'axios';
   export default {
     data() {
@@ -37,7 +42,7 @@ import axios from 'axios';
         jobsTable :null,
         msg:null,
         plotData:null,
-        geojsonData:null,
+        geojsonData:{},
       }
     },
     methods: {
@@ -53,9 +58,10 @@ import axios from 'axios';
               // 处理响应
               this.householdsTable = JSON.parse(response.data.data) ;  
               this.msg = response.data.msg;
-              this.geojsonData =JSON.parse(response.data.geojson_plot_data);
-              console.log(this.geojsonData);
+              this.geojsonData =response.data.geojson_plot_data;
+              
               this.plotData = this.householdsTable
+              console.log("*****this.geojsonData********",this.geojsonData['50']);
             }) //response 是服务器的响应
             .catch(error => {
           console.log(error);
@@ -74,17 +80,26 @@ import axios from 'axios';
               this.jobsTable = JSON.parse(response.data.data) ;  
               this.plotData = this.jobsTable
               this.msg = response.data.msg
-              console.log('get jobsTable table')
+              console.log('get jobsTable table',this.plotData)
             }) //response 是服务器的响应
             .catch(error => {
           console.log(error);
         });
         // console.log('householdsTable',this.householdsTable)
       },
+      orcaBack(){
+        console.log("清除缓存");
+          axios.post('http://localhost:5000/run/orcaBack').then(response =>{
+                // 处理响应
+                this.msg = response.data.msg; 
+                console.log("runOfficeDeveloper ",this.developerData)
+          })
+      }
     },
     components:{
       TableComponent,
-      MapMapbox
+      // MapMapbox,
+      MapOl
     },
     computed:{
       // householdsTable_plot(){
@@ -96,7 +111,13 @@ import axios from 'axios';
 
 <style scoped>
 /* local styles */
-.my-tabs {
+.el-tabs{
+  width: 900px;
+}
+.el-tabs__nav-scroll .el-tabs__content .mapboxgl-canvas{
+  height: 500px;
   width: 100%;
 }
+
+
 </style>

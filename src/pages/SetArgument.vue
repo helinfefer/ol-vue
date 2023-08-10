@@ -2,6 +2,8 @@
     <div>
         <el-divider></el-divider>
         <el-form >
+            <el-button type="primary" @click="orcaBack">清除缓存</el-button>
+            <span>{{ msg }}</span>
             <el-form-item label=" - settings.yaml文件上传:">
               <el-upload
                     class="upload-settings"
@@ -81,8 +83,13 @@
   </template>
   
   <script>
-// import axios from 'axios';
+  import axios from 'axios';
   export default {
+    data(){
+      return{
+        msg:"null"
+      }
+    },
     methods: {
       handleSuccess(response, file) {
             console.log('文件上传成功！', file);
@@ -103,6 +110,14 @@
       //   });
       //   console.log(this.householdsTable)
       // }
+      orcaBack(){
+        console.log("清除缓存");
+          axios.post('http://localhost:5000/run/orcaBack').then(response =>{
+                // 处理响应
+                this.msg = response.data.msg; 
+                console.log(this.msg)
+          })
+      }
     }
   }
   </script>

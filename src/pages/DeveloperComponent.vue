@@ -50,7 +50,7 @@
     export default {
     data() {
         return {
-            activeName: 'third',
+            activeName: 'first',
             feasibilityData:{},
             // plotData:{},
             // householdsTable:{},
