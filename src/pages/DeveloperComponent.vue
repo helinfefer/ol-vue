@@ -32,9 +32,9 @@
         <br>
 
         <!-- 开发商模型发送给地图子组件的数据 -->
-        <!-- <MapOl :developerData = "developerData"></MapOl> -->
+        <MapOl v-if="shouldRenderMapOl" :developerData = "developerData"></MapOl>
         <!-- <MapOl :developer_form = "developer_form"></MapOl> -->
-        <MapOl v-if="shouldRenderMapOl" :developerDataMerge="developerDataMerge"></MapOl>
+        <!-- <MapOl v-if="shouldRenderMapOl" :developerDataMerge="developerDataMerge"></MapOl> -->
       </el-tab-pane>
       <!-- <el-tab-pane label="非居住开发商模型" name="fourth">非居住开发商模型</el-tab-pane> -->
 
@@ -59,12 +59,12 @@
         };
     },
     computed:{
-      developerDataMerge() {
-        return {
-          "developerData": this.developerData,
-          "developer_form": this.developer_form
-        };
-      },
+      // developerDataMerge() {
+      //   return {
+      //     "developerData": this.developerData,
+      //     "developer_form": this.developer_form
+      //   };
+      // },
     shouldRenderMapOl() {
         return this.developerData != null && this.developer_form !== "default"; // 这里是你的条件
       }
@@ -123,9 +123,28 @@
         },
         runOfficeDeveloper(){
           console.log("办公- 开发商模型");
+          this.developer_form = "office"
+          axios.post('http://localhost:5000/run/office_developer').then(response =>{
+                // 处理响应
+                // this.householdsTable = JSON.parse(response.data.data);
+                // this.msgHLCM = response.data.msg;
+                // this.plotData = this.householdsTable 
+                this.developerData = response.data.geojson_plot_data; 
+                console.log("runOfficeDeveloper ",this.developerData)
+            })
         },
         runIndustrialDeveloper(){
           console.log("工业- 开发商模型");
+          this.developer_form = "industrial"
+          axios.post('http://localhost:5000/run/industrial_developer').then(response =>{
+                // 处理响应
+                // this.householdsTable = JSON.parse(response.data.data);
+                // this.msgHLCM = response.data.msg;
+                // this.plotData = this.householdsTable 
+                this.developerData = response.data.geojson_plot_data; 
+                console.log("runOfficeDeveloper ",this.developerData)
+            })
+
         },
 
     },

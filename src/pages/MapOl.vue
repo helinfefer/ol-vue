@@ -38,13 +38,13 @@
         //   type: String,
         //   default: () => ("default")
         // },
-        developerDataMerge:{
-          type: Object,
-          default: () => ({
-            "developerData":{},
-            "developer_form": "default"
-          })
-        },
+        // developerDataMerge:{
+        //   type: Object,
+        //   default: () => ({
+        //     "developerData":{},
+        //     "developer_form": "default"
+        //   })
+        // },
 
     },
       data(){
@@ -216,15 +216,16 @@
               const alpha = 0.8;
               if (BedeveloperedValue !== undefined && BedeveloperedValue.toString() === "1") {
                 // console.log(this.developerDataMerge['developer_form'])
-                if (this.developerDataMerge['developer_form'] === "residential"){
-                  return `rgba(253, 255, 0, ${alpha})`
-                }else if (this.developerDataMerge['developer_form'] === "office"){
-                  return `rgba(96, 129, 200, ${alpha})`
-                }else if (this.developerDataMerge['developer_form'] === "retail"){
-                  return `rgba(174, 181, 222, ${alpha})`
-                }else if (this.developerDataMerge['developer_form']=="industrial"){
-                  return `rgba(134, 79, 46, ${alpha})`
-                }
+                // if (this.developerDataMerge['developer_form'] === "residential"){
+                //   return `rgba(253, 255, 0, ${alpha})`
+                // }else if (this.developerDataMerge['developer_form'] === "office"){
+                //   return `rgba(96, 129, 200, ${alpha})`
+                // }else if (this.developerDataMerge['developer_form'] === "retail"){
+                //   return `rgba(174, 181, 222, ${alpha})`
+                // }else if (this.developerDataMerge['developer_form']=="industrial"){
+                //   return `rgba(134, 79, 46, ${alpha})`
+                // }
+                return `rgba(250, 193, 27, ${alpha})`;
               }
 
               return `rgba(27, 27, 27, ${alpha})`; // green
@@ -235,7 +236,8 @@
               style: (feature) => {
                 // console.log("developer_form:",this.developerDataMerge['developer_form'])
                   const parcelId = feature.get('parcel_id').toString();
-                  const BedeveloperedValue = this.developerDataMerge['developerData'][parcelId];
+                  // const BedeveloperedValue = this.developerDataMerge['developerData'][parcelId];
+                  const BedeveloperedValue = this.developerData[parcelId];
                   const color = getColorFromDeveloper(BedeveloperedValue);
                   return new Style({
                       fill: new Fill({
@@ -247,7 +249,8 @@
                       })
                   });
                 },
-              title:this.developerDataMerge['developer_form']
+              // title:this.developerDataMerge['developer_form']
+              title:'Bedevelopered'
           });
           this.map.addLayer(this.vectorLayer);
           
@@ -281,7 +284,7 @@
         handler: 'updateFeasibilityLayer',
         deep: true
       },
-      developerDataMerge:{
+      developerData:{
         handler: 'updateDeveloperLayer',
         deep: false,
       },
