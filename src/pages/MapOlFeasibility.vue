@@ -16,8 +16,9 @@
     import VectorLayer from 'ol/layer/Vector';
     import VectorSource from 'ol/source/Vector';
     import { Fill,Stroke,Style } from 'ol/style';
-    import { Circle } from 'ol/style';
+    // import { Circle } from 'ol/style';
     import LayerSwitcher from 'ol-layerswitcher';
+    import Popup from 'ol-popup';
 
     export default {
       name:'MapOlFeasibility',
@@ -64,62 +65,95 @@
         //     url:'div_parcels.geojson'   //! ***********
         // });
 
-        // 加载geojsonData数据
-        const response= await fetch("test_layers_data.geojson");
+        // 加载geojsonData数据. zoning_baseline
+        // 
+        const response= await fetch("zoning_baseline.geojson");
         this.ZoningGeojsonData = await response.json();
-        console.log('this.ZoningGeojsonData',this.ZoningGeojsonData) 
+        // console.log('this.ZoningGeojsonData',this.ZoningGeojsonData) 
 
+        // 假设您有以下图层类型和相应的颜色
+        const typesWithColors = {
+          'HS': "rgba(255, 192, 203,0.5)",
+          'MR': "rgba(165, 42, 42,0.5)",
+          'AC': "rgba(255, 255, 0,0.5)",
+          'IL': "rgba(166, 0, 171,0.5)",
+          'OF': "rgba(239, 126, 22,0.5)",
+          'RL': "rgba(245, 247, 0,0.5)",
+          'ME': "rgba(141, 77, 0,0.5)",
+          'MT': "rgba(237, 195, 213,0.5)"
+        };
 
-         // 创建VectorSource对象按类型分组
-         this.sourcesByType = {
-            "1": new VectorSource(),
-            "2": new VectorSource()
-          };
-         console.log('sourcesByType:',this.sourcesByType)
+        // 创建VectorSource对象按类型分组
+        this.sourcesByType = {};
+        Object.keys(typesWithColors).forEach((type) => {
+          this.sourcesByType[type] = new VectorSource();
+        });
 
-        //  根据数据的特性，将数据添加到特定的源中
+        // 根据数据的特性，将数据添加到特定的源中
         const geoJsonFormat = new GeoJSON();
-
-
         geoJsonFormat.readFeatures(this.ZoningGeojsonData).forEach((feature) => {
-            const properties = feature.getProperties();
-            console.log(properties); // 打印特性的所有属性
-            const zonetype = properties.zonetype.toString();
-            if (this.sourcesByType[zonetype]) {
-              this.sourcesByType[zonetype].addFeature(feature);
-            } else {
-              console.warn("未知类型: " + zonetype);
+          const properties = feature.getProperties();
+          Object.keys(typesWithColors).forEach((type) => {
+            if (properties[type] === 1) {
+              this.sourcesByType[type].addFeature(feature);
             }
-      });
+          });
+        });
 
-
-      // 为每种类型创建图层并将其添加到地图上
-      Object.keys(this.sourcesByType).forEach((zonetype) => {
-        const vectorLayer = new VectorLayer({
-          source: this.sourcesByType[zonetype],
-          style: new Style({
-            image: new Circle({
-              radius: 10,
+        // 为每种类型创建图层并将其添加到地图上
+        Object.keys(this.sourcesByType).forEach((type) => {
+          const vectorLayer = new VectorLayer({
+            source: this.sourcesByType[type],
+            style: new Style({
               fill: new Fill({
-                color: zonetype === "1" ? "red" : "blue",
+                color: typesWithColors[type], // 使用类型对应的颜色
               }),
               stroke: new Stroke({
-                color: "grey",
+                color: 'grey',
                 width: 1,
               }),
             }),
-          }),
-          title: `Zone Type ${zonetype}`, // Set a title for the legend
-          type: 'base', // Required if you want to group layers
+            title: `Layer ${type}`, // 设置图例标题
+            type: 'overlay' // required if you want to group layers
+          });
+          this.map.addLayer(vectorLayer);
         });
-        this.map.addLayer(vectorLayer);
-      });
 
-      // Create a LayerSwitcher instance and add it to the map
-      const layerSwitcher = new LayerSwitcher({
-        tipLabel: 'Legend', // Optional label for button
-      });
-      this.map.addControl(layerSwitcher);
+        // Create a LayerSwitcher instance and add it to the map
+        const layerSwitcher = new LayerSwitcher({
+          tipLabel: 'Legend', // Optional label for button
+        });
+        this.map.addControl(layerSwitcher);
+        
+        // 创建 Popup 实例
+        this.popup = new Popup();
+        this.map.addOverlay(this.popup);
+
+        // 添加点击事件监听器
+        this.map.on('singleclick', (evt) => {
+          const feature = this.map.forEachFeatureAtPixel(evt.pixel, (feature) => feature);
+          if (feature) {
+            const coordinates = evt.coordinate;
+            const content = this.getFeatureProperties(feature); // 获取要素属性的自定义函数
+            this.popup.show(coordinates, content);
+          } else {
+            this.popup.hide();
+          }
+        });
+
+
+    },
+    methods:{
+      getFeatureProperties(feature) {
+        // 获取要素属性并格式化为 HTML
+        const properties = feature.getProperties();
+        let content = '<div style="opacity: 0.8;"><h3>Properties:</h3><ul>'; // 设置透明度
+        for (const key in properties) {
+          content += `<li>${key}: ${properties[key]}</li>`;
+        }
+        content += '</ul></div>';
+        return content;
+      }
     },
   };
 </script>

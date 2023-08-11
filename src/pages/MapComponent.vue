@@ -220,7 +220,7 @@
 
 <style scoped>
 .map-container {
-  height: 500px;
+  height: 800px;
   width: 100%;
 }
 </style>
