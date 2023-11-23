@@ -23,12 +23,15 @@ Vue.config.productionTip = true
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
 
+
+
+// LayerSwitcher  
+
+
 Vue.use(VueRouter);
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(ElementUI);
-
-
 
 
 new Vue({

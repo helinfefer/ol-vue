@@ -45,11 +45,15 @@
                         <router-link to="/ums/SetArgument">参数设置</router-link>
                     </el-menu-item>
 
+                    <el-menu-item index="2-1-5">
+                      <router-link to="/ums/SetScenario">情景设定</router-link>
+                  </el-menu-item>
+
                     <el-menu-item index="2-1-1">
                         <router-link to="/ums/tansitionmodel">转移模型</router-link>
                     </el-menu-item>
                     <el-menu-item index="2-1-2">
-                        <router-link to="/ums/relocation">迁移模型</router-link>
+                        <router-link to="/ums/tansitionmodel">迁移模型</router-link>
                     </el-menu-item>
                     <el-menu-item index="2-1-3">
                       <router-link to="/ums/lcm">区位选择模型</router-link>

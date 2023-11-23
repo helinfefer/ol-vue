@@ -16,6 +16,7 @@ import MapOl from '../pages/MapOl.vue'
 import MapOlLcm from '../pages/MapOlLcm.vue'
 import MapOlFeasibility from '../pages/MapOlFeasibility.vue'
 import TwoLayerIndex from '../pages/TwoLayerIndex.vue'
+import SetScenario from '../pages/SetScenario.vue'
 export default new VueRouter({
     routes: [
         {
@@ -66,6 +67,10 @@ export default new VueRouter({
                     ]
                 },
                 {
+                    path:'setscenario',
+                    component:SetScenario
+                },
+                {
                     path:'lcm',
                     component:LcmComponent
                 },
@@ -73,6 +78,7 @@ export default new VueRouter({
                     path:'developer',
                     component:DeveloperComponent
                 },
+
 
             ]
         },

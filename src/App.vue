@@ -69,6 +69,7 @@ button {
 	main {
 		flex: 1 1 0;
 		padding: 2rem;
+		min-width: 500px; 
 
 		@media (max-width: 768px) {
 			padding-left: 6rem;
