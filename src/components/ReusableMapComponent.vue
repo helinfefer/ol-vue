@@ -12,12 +12,13 @@
     import View from 'ol/View.js';
     import OSM from 'ol/source/OSM';
     import TileLayer from 'ol/layer/Tile'
+    import LayerSwitcher from 'ol-layerswitcher';
 
     export default {
       name:'ReusableMapComponent',
       data() {
         return {
-          map: null // 用于存储地图实例
+          map: null, // 用于存储地图实例，
         };
       },
       props: {
@@ -30,7 +31,10 @@
           type: Number,
           default: 10
         },
-        // 可以添加更多配置项...
+        layers: {
+          type: Array,
+          default:()=>{}
+        }
       },
       mounted() {
         this.initializeMap();
@@ -44,17 +48,22 @@
             projection: 'EPSG:4326', // 设置视图的投影坐标系
           });
           console.log(view);
+          // 设置基础的底图
+          const baseLayer = new TileLayer({
+            source: new OSM(),
+            title:'OSM',
+          });
           // 创建地图实例
           this.map = new Map({
             target: this.$refs['map-root'],
-            layers: [
-              // 添加一个基础图层，例如OpenStreetMap
-            new TileLayer({
-                source: new OSM()
-              }),
-            ],
-            view: view // 设置地图的视图
+            layers: [baseLayer],
+            view: view, // 设置地图的视图,
           });
+          console.log("添加图层")
+          // 初始化并添加 LayerSwitcher 控件
+          const layerSwitcher = new LayerSwitcher();
+          this.map.addControl(layerSwitcher);
+
         }
       }
     }
