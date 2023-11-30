@@ -31,15 +31,20 @@
           type: Number,
           default: 10
         },
-        layers: {
-          type: Array,
-          default:()=>{}
-        }
+        layerGroup: {
+          type: Object,
+          default: null
+        },
+        layerGroupName:{
+          type:Array,
+          default:()=>[]
+        },
       },
-      mounted() {
-        this.initializeMap();
-      },
+
       methods: {
+        updateLayerGroup(){
+          console.log("updateLayerGroup");
+        },
         initializeMap() {
           // 创建地图视图实例
           const view = new View({
@@ -53,19 +58,37 @@
             source: new OSM(),
             title:'OSM',
           });
+
+          console.log("baseLayer", this.layerGroup.get('layers')[0]);
+
           // 创建地图实例
+          console.log('创建图例baseLayer',this.layerGroup);
           this.map = new Map({
             target: this.$refs['map-root'],
-            layers: [baseLayer],
+            layers: [baseLayer,this.layerGroup],
             view: view, // 设置地图的视图,
           });
-          console.log("添加图层")
-          // 初始化并添加 LayerSwitcher 控件
-          const layerSwitcher = new LayerSwitcher();
-          this.map.addControl(layerSwitcher);
+          
+          console.log("添加图层*************")
+          // 在地图初始化之后添加 LayerSwitcher 控件
+          this.layerSwitcher = new LayerSwitcher({
+            reverse: true,
+            groupSelectStyle: 'group'
+          });
+          this.map.addControl(this.layerSwitcher);
+        },
 
-        }
-      }
+      },
+      mounted() {
+        this.initializeMap();
+        // this.updateLayerGroup();
+      },
+      // watch:{
+      //   layerGroup:{
+      //     handler: 'updateLayerGroup',   
+      //     deep: true
+      //   }
+      // }
     }
 </script>
 
