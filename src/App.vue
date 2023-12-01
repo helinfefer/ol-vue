@@ -3,8 +3,10 @@
 	<el-aside width="200px"><SideBar/></el-aside>
 	<el-container>
 		<el-header style="text-align: right;">
-			<el-button @click="goBack">返回</el-button>
+			<el-button @click="goBack">Base Data Viewer</el-button>
 			<el-button @click="goToInputPage">上传数据</el-button>
+			<el-button @click="goToInputPage">Base Data Collections</el-button>
+			<el-button @click="goToInputPage">开发项目</el-button>
 		</el-header>
 		<el-main><router-view ></router-view></el-main>
 		<el-footer>Footer</el-footer>

@@ -17,6 +17,8 @@ import MapOlLcm from '../pages/MapOlLcm.vue'
 import MapOlFeasibility from '../pages/MapOlFeasibility.vue'
 import TwoLayerIndex from '../pages/TwoLayerIndex.vue'
 import SetScenario from '../pages/SetScenario.vue'
+import UploadData from '../pages/UploadData.vue'
+
 export default new VueRouter({
     routes: [
         {
@@ -78,7 +80,10 @@ export default new VueRouter({
                     path:'developer',
                     component:DeveloperComponent
                 },
-
+                {
+                    path:'upload',
+                    component:UploadData
+                },
 
             ]
         },

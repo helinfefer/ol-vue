@@ -1,16 +1,14 @@
 <template>
     <el-container>
       <!-- 头部区域 -->
-      <h1>上传</h1>
-        <!-- 查询 -->
       <el-header>
+          <!-- 查询 -->
         <el-input
           placeholder="Search"
           prefix-icon="el-icon-search"
           v-model="searchQuery">
         </el-input>
       </el-header>
-      <!-- form-->
       <el-form 
         ref="form" 
         :model="form" 
@@ -24,22 +22,25 @@
                 action="http://localhost:5000/upload_data/employControl"
                 multiple
                 :limit="3"
-                :file-list="fileList">
-                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="家庭控制总量:" >
-            <el-upload
-                class="upload-demo"
-                action="http://localhost:5000/upload_data/householdControl"
-                accept=".csv"
-                :on-success="handleSuccess"
-                :on-error="handleError"     
+                :file-list="$store.state.uploadJobControlFileList"
                 >
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
           </el-form-item>
 
+          <el-form-item label="家庭控制总量:" >
+            <el-upload
+                class="upload-demo"
+                action="http://localhost:5000/upload_data/householdControl"
+                multiple
+                :limit="3"
+                accept=".csv"
+                :file-list="$store.state.uploadHouseholdsControlFileList"
+                >
+                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            </el-upload>
+          </el-form-item>
+<!-- 
           <el-form-item label="Zoning:" >
             <el-upload
                 class="upload-demo"
@@ -175,22 +176,60 @@
                 :file-list="fileList">
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
-          </el-form-item>
+          </el-form-item> -->
 
 
         </el-form>  
+        <input v-model="$store.state.message" placeholder="edit me" @click="changeM">
+        <p>Message is: {{ $store.state.message }}</p>
+        <p>就业控制总量</p>
+        <ul>
+            <li v-for="file in $store.state.uploadJobControlFileList" :key="file.name">
+            {{ file.name }}
+            </li>
+        </ul>
+        <p>家庭控制总量</p>
+        <li v-for="file in $store.state.uploadHouseholdsControlFileList" :key="file.name">
+            {{ file.name }}
+        </li>
+          
     </el-container>
   </template>
 
 
 <script>
 export default {
+    data(){
+        return{
+            form:{
+
+            },
+            searchQuery:null,
+        }
+    },
     name:"UploadData",
     methods: {
-        upload() {
-            const payload = {/* 上传的数据 */};
-            this.$store.dispatch('uploadData', payload);
-        }
+        changeM(){
+            this.$store.commit('changeMessage', this.$store.state.message)
+            console.log('*************message',this.$store.state.message)
+        },
+    },
+    mounted(){
     }
 };
 </script>
+
+
+<style scoped>
+
+/* 保持与其他表单项标签的一致性 */
+.el-form-item__label {
+  float: left;
+  font-size: 14px; /* 调整字体大小 */
+  color: #606266; /* 调整字体颜色 */
+  line-height: 30px; /* 调整行高 */
+  margin-right: 12px; /* 标签与输入框的间距 */
+}
+
+/* 其他样式调整 */
+</style>
