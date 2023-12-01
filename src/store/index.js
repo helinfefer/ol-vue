@@ -1,0 +1,24 @@
+// 该文件用于创建Vuex中最为关键的store
+import Vue from 'vue';
+// 引入Vuex
+import Vuex from 'vuex';
+Vue.use(Vuex);
+// 准备actions功能，actions 用于响应组件中的动作
+const actions = {
+}
+// 准备 mutations  功能， mutations 用于操作数据
+
+const mutations = {
+}
+
+
+// 准备 state  功能， state 用于存储数据
+const state = {
+}
+
+// 创建store 并暴露store
+export default new Vuex.Store({
+    actions:actions,
+    mutations:mutations,
+    state:state,
+})

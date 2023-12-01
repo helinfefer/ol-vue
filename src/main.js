@@ -24,8 +24,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
 
 
-
-// LayerSwitcher  
+// 引入 store 
+import store from './store/index.js';
 
 
 Vue.use(VueRouter);
@@ -37,4 +37,6 @@ Vue.use(ElementUI);
 new Vue({
   router,
   render: h => h(App),
+  store:store,  //可以简写
 }).$mount('#app')
+

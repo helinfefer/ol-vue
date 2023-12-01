@@ -29,7 +29,7 @@ export default {
     // SidebarComponent,
     SideBar,
     // ParentOfMapSlideBar,
-  }
+  },
 }
 </script>
 
