@@ -10,7 +10,11 @@ const actions = {
         console.log('actions addJobControlFile 被调用',file); 
         miniStore.commit('ADDJOBCONTROLFILE',file);
 
-    }
+    },
+    addHouseholdControlFile(miniStore,file){
+        console.log('actions addHouseholdControlFile 被调用',file); 
+        miniStore.commit('ADDHOUSEHOLDCONTROLFILE',file);
+    },
   };
   
 
@@ -23,7 +27,11 @@ const mutations = {
     },
     ADDJOBCONTROLFILE(state, jobControlsFile){
         state.uploadJobControlFileList = state.uploadJobControlFileList.concat(jobControlsFile)
-        console.log('ADDFILE mutation************',state.uploadJobControlFileList)
+        console.log('ADDJOBCONTROLFILE mutation************',state.uploadJobControlFileList)
+    },
+    ADDHOUSEHOLDCONTROLFILE(state, householdControlsFile){
+        state.uploadHouseholdsControlFileList = state.uploadHouseholdsControlFileList.concat(householdControlsFile)
+        console.log('ADDHOUSEHOLDCONTROLFILE mutation************',state.uploadHouseholdsControlFileList)
     },
   };
   
