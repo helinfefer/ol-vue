@@ -39,7 +39,8 @@
                 multiple
                 :limit="3"
                 accept=".csv"
-                :file-list="$store.state.uploadHouseholdsControlFileList"
+                :file-list="uploadHouseholdControlFileList"
+                :on-success="uploadHouseholdControlFileSuccess"
                 >
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
@@ -181,37 +182,28 @@
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
           </el-form-item> -->
-
-
         </el-form>  
         <input v-model="$store.state.message" placeholder="edit me" @click="changeM">
         <p>Message is: {{ $store.state.message }}</p>
-        <p>就业控制总量</p>
-        <ul>
-            <li v-for="file in $store.state.uploadJobControlFileList" :key="file.uid">
-            {{ file.name }}
-            </li>
-        </ul>
-        <p>家庭控制总量</p>
-        <li v-for="file in $store.state.uploadHouseholdsControlFileList" :key="file.name">
-            {{ file.name }}
-        </li>
-          
+
+        <DataListComponent></DataListComponent>
     </el-container>
   </template>
 
 
 <script>
+import DataListComponent from '../components/DataListComponent.vue'
 export default {
     data(){
         return{
           uploadJobControlFileList:[],
-            form:{
-
+          uploadHouseholdControlFileList:[],
+          form:{
             },
             searchQuery:null,
         }
     },
+    components:{DataListComponent},
     name:"UploadData",
     methods: {
           handleRemove(file, fileList) {
@@ -237,7 +229,14 @@ export default {
           console.log('*************ADDJOBFILE',file,'*************',fileList)
           this.$store.dispatch('addJobControlFile',fileList)
           // this.$store.commit('ADDFILE', this.uploadJobControlFileList)
+        },
+        uploadHouseholdControlFileSuccess(file,fileList){
+          // dispatch
+          console.log('*************ADDHouseholdFILE',file,'*************',fileList)
+          this.$store.dispatch('addHouseholdControlFile',fileList)
+          // this.$store.commit('ADDFILE', this.uploadJobControlFileList)
         }
+
     },
     mounted(){
     }
