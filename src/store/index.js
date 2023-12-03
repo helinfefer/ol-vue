@@ -6,6 +6,11 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 // 准备actions功能，actions 用于响应组件中的动作
 const actions = {
+    addJobControlFile(miniStore,file){
+        console.log('actions addJobControlFile 被调用',file); 
+        miniStore.commit('ADDJOBCONTROLFILE',file);
+
+    }
   };
   
 
@@ -15,16 +20,18 @@ const mutations = {
     changeMessage(state, message){
         state.message = message;
         console.log(message);
-    }
+    },
+    ADDJOBCONTROLFILE(state, jobControlsFile){
+        state.uploadJobControlFileList = state.uploadJobControlFileList.concat(jobControlsFile)
+        console.log('ADDFILE mutation************',state.uploadJobControlFileList)
+    },
   };
   
 
 // 准备 state  功能， state 用于存储数据
 const state = {
     message:'hello world',
-    uploadJobControlFileList : [{
-        name:'uploadFile-text'
-    }],
+    uploadJobControlFileList : [],
     uploadHouseholdsControlFileList:[]
 }
 

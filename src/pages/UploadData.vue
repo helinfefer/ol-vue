@@ -21,10 +21,14 @@
                 class="upload-demo"
                 action="http://localhost:5000/upload_data/employControl"
                 multiple
-                :limit="3"
-                :file-list="$store.state.uploadJobControlFileList"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+
+                :file-list="uploadJobControlFileList"
+                :on-success="uploadJobControlFileSuccess"
                 >
-                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                <el-button slot="trigger" size="small" type="primary" >选取文件</el-button>
             </el-upload>
           </el-form-item>
 
@@ -184,7 +188,7 @@
         <p>Message is: {{ $store.state.message }}</p>
         <p>就业控制总量</p>
         <ul>
-            <li v-for="file in $store.state.uploadJobControlFileList" :key="file.name">
+            <li v-for="file in $store.state.uploadJobControlFileList" :key="file.uid">
             {{ file.name }}
             </li>
         </ul>
@@ -201,6 +205,7 @@
 export default {
     data(){
         return{
+          uploadJobControlFileList:[],
             form:{
 
             },
@@ -209,10 +214,30 @@ export default {
     },
     name:"UploadData",
     methods: {
+          handleRemove(file, fileList) {
+            console.log(file, fileList);
+          },
+          handlePreview(file) {
+            console.log(file);
+          },
+          handleExceed(files, fileList) {
+            this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+          },
+          beforeRemove(file) {
+            return this.$confirm(`确定移除 ${ file.name }？`);
+          },
+        
         changeM(){
             this.$store.commit('changeMessage', this.$store.state.message)
             console.log('*************message',this.$store.state.message)
         },
+
+        uploadJobControlFileSuccess(file,fileList){
+          // dispatch
+          console.log('*************ADDJOBFILE',file,'*************',fileList)
+          this.$store.dispatch('addJobControlFile',fileList)
+          // this.$store.commit('ADDFILE', this.uploadJobControlFileList)
+        }
     },
     mounted(){
     }
