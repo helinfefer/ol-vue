@@ -1,48 +1,35 @@
 <template>
   <div>
-
-    <p>就业控制总量</p>
-    <el-select v-model="selectedJobFile" placeholder="请选择文件" @change="displayContent(selectedJobFile)">
-        <el-option
-            v-for="file in $store.state.uploadJobControlFileList"
-            :key="file.uid"
-            :label="file.name"
-            :value="file">
-        </el-option>
-    </el-select>
-
-    <p>家庭控制总量</p>
-    <el-select v-model="selectedHouseholdFile" placeholder="请选择文件" @change="displayContent(selectedHouseholdFile)">
-        <el-option
-            v-for="file in $store.state.uploadHouseholdsControlFileList"
-            :key="file.uid"
-            :label="file.name"
-            :value="file">
-        </el-option>
-    </el-select>
-
-    <el-table
-    :data="dataFromParent"
-    style="width: 100%"
-    >
-      <!-- 动态生成 el-table-column -->
-      <el-table-column
-      v-for="(value, key) in dataFromParent[0]"
-        :key="key"
-        :prop="key"
-        :label="key"
-        ></el-table-column>
-      </el-table>
+    <el-row>
+      <el-col :span="4">
+        <DataListComponent/>
+      </el-col>
+      <el-col :span="20">
+        <el-table
+        :data="dataFromParent"
+        style="width: 100%"
+        >
+          <!-- 动态生成 el-table-column -->
+          <el-table-column
+          v-for="(value, key) in dataFromParent[0]"
+            :key="key"
+            :prop="key"
+            :label="key"
+            ></el-table-column>
+          </el-table>
+      </el-col>
+    </el-row>
+    
   </div>
 </template>
 
 <script>
+import DataListComponent from "../components/DataListComponent.vue"
 export default {
   name:"ReusableTableComponent",
+  components:{DataListComponent},
   data(){
     return{
-      selectedJobFile: '',
-      selectedHouseholdFile: '',
     }
   },
   props:{
@@ -62,4 +49,3 @@ export default {
   }
 }
 </script>
-
