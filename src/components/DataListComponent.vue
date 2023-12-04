@@ -38,7 +38,7 @@
                   :value="item.name">
                 </el-option>
             </el-select>
-
+            <el-tree :data="$store.state.elTreeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
         </el-col>
     </el-row>
 
@@ -50,7 +50,7 @@ export default {
     name:"DataListComponent",
     data() {
         return {
-            selectedFileContent: null,
+            // selectedFileContent: null,
             options: [{
                 value: '选项1',
                 label: '黄金糕'
@@ -70,6 +70,11 @@ export default {
             uploadJobControlFile: '',
             uploadHouseholdsControlFile:'',
 
+
+            defaultProps: {
+            children: 'children',
+            label: 'label'
+            }
         }
     },
     mounted(){
@@ -80,7 +85,10 @@ export default {
     methods:{
         displayContent(file){
             console.log('displayContent 函数被调用',file.name);
-        }
+        },
+        handleNodeClick(data) {
+        console.log(data);
+      }
     },
 
 }

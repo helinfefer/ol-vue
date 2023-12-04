@@ -9,6 +9,7 @@ const actions = {
     addJobControlFile(miniStore,file){
         console.log('actions addJobControlFile 被调用',file); 
         miniStore.commit('ADDJOBCONTROLFILE',file);
+        localStorage.setItem('msg',file.name);
 
     },
     addHouseholdControlFile(miniStore,file){
@@ -28,10 +29,21 @@ const mutations = {
     ADDJOBCONTROLFILE(state, jobControlsFile){
         state.uploadJobControlFileList = state.uploadJobControlFileList.concat(jobControlsFile)
         console.log('ADDJOBCONTROLFILE mutation************',state.uploadJobControlFileList)
+        var elTreeJobDataItem = {
+            'label': jobControlsFile.name,
+            'uid':jobControlsFile.uid,
+        }
+        state.elTreeData[0]['children'].push(elTreeJobDataItem)
     },
     ADDHOUSEHOLDCONTROLFILE(state, householdControlsFile){
         state.uploadHouseholdsControlFileList = state.uploadHouseholdsControlFileList.concat(householdControlsFile)
         console.log('ADDHOUSEHOLDCONTROLFILE mutation************',state.uploadHouseholdsControlFileList)
+        var elTreeHouseholdsDataItem = {
+            'label': householdControlsFile.name,
+            'uid':householdControlsFile.uid,
+        }
+        state.elTreeData[1]['children'].push(elTreeHouseholdsDataItem)
+
     },
   };
   
@@ -40,7 +52,22 @@ const mutations = {
 const state = {
     message:'hello world',
     uploadJobControlFileList : [],
-    uploadHouseholdsControlFileList:[]
+    uploadHouseholdsControlFileList:[],
+     // 文件名树形控件
+    elTreeData: [{
+        label: '就业控制总量',
+        children: [{
+            label: 'job_controls.csv ',
+            uid:'01'
+        }]
+        }, {
+        label: '家庭控制总量',
+        children: [{
+            label: '二级 2-1',
+        }, {
+            label: '二级 2-2',
+        }]
+        }],
 }
 
 // 创建store 并暴露store
