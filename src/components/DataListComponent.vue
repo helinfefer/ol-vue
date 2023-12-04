@@ -26,7 +26,10 @@
                   :value="item.name">
                 </el-option>
             </el-select>
+
             <el-tree :data="$store.state.elTreeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+
+            <p>当前选择的文件是：{{$store.state.selectedFileUid}}</p>
         </el-col>
     </el-row>
 
@@ -59,7 +62,16 @@ export default {
             console.log('displayContent 函数被调用',file.name);
         },
         handleNodeClick(data) {
-        console.log(data);
+        // data.name就是文件名，data.uid 就是文件id
+        if (data.level === 1) {
+            // 这是一级节点
+            console.log('Clicked a root level node');
+        } else {
+            // 这是非一级节点
+            console.log('Clicked a non-root level node');
+            // 将数据传给$store.state.selectedFileUid,跳过dispatch,直接commit调用mutation函数
+            this.$store.commit('CHANGESELETEDFILEUID',data)
+        }
       }
     },
 
