@@ -30,7 +30,7 @@ export default new VueRouter({
             component: MapComponent
         },
         {
-            path:'ol',
+            path:'/ol',
             component: MapOl
         },
         {
@@ -102,7 +102,7 @@ export default new VueRouter({
         },
         {
             path:'/table',
-            TableComponent
+            component:TableComponent
         }
     ]
 })
