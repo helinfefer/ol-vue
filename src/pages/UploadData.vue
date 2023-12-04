@@ -183,8 +183,6 @@
             </el-upload>
           </el-form-item> -->
         </el-form>  
-        <input v-model="$store.state.message" placeholder="edit me" @click="changeM">
-        <p>Message is: {{ $store.state.message }}</p>
 
         <DataListComponent></DataListComponent>
     </el-container>
@@ -219,10 +217,6 @@ export default {
             return this.$confirm(`确定移除 ${ file.name }？`);
           },
         
-        changeM(){
-            this.$store.commit('changeMessage', this.$store.state.message)
-            console.log('*************message',this.$store.state.message)
-        },
 
         uploadJobControlFileSuccess(file,fileList){
           // dispatch
