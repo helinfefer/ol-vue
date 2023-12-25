@@ -32,6 +32,22 @@
             </el-upload>
           </el-form-item>
 
+          <el-form-item label="模型基础数据Model Base Data:">
+            <el-upload
+                class="upload-demo"
+                action="http://localhost:5000/upload_data/employControl"
+                multiple
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+
+                :file-list="uploadJobControlFileList"
+                :on-success="uploadJobControlFileSuccess"
+                >
+                <el-button slot="trigger" size="small" type="primary" >选取文件</el-button>
+            </el-upload>
+          </el-form-item>
+          
           <el-form-item label="家庭控制总量:" >
             <el-upload
                 class="upload-demo"
