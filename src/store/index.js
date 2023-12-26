@@ -96,7 +96,8 @@ const mutations = {
         const vectorSource = new VectorSource({
         features: new GeoJSON().readFeatures(geojsonData)});
         // 转为图层
-        const newVectorLayer = new VectorLayer({source: vectorSource,title: 'Selected Data'})
+        const newTitle = (state.selectedFileName).split('.')[0]
+        const newVectorLayer = new VectorLayer({source: vectorSource,title: newTitle})
         // 添加到图层中
         state.layerGroup.getLayers().push(newVectorLayer);
         console.log("🚀 ~ file: index.js:98 ~ SET_LAYER_GROUP ~ geojsonData:", geojsonData)

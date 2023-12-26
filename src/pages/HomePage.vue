@@ -3,8 +3,6 @@
 		<ReusableMapComponent
 		:initialCenter="mapCenter"
 		:initialZoom="mapZoom"
-		:layerGroup="layerGroup"
-		:layerGroupName="layerGroupName"
 		></ReusableMapComponent>
 		<el-row>
 			<!-- 数据list -->
@@ -91,7 +89,7 @@ export default {
 
 			mapCenter:[114.1692, 30.494],
 			mapZoom:10,
-			layerGroupName:['VectorLayer','hubei'],
+			// layerGroupName:['VectorLayer','hubei'],
 		// 	layerGroup:  new LayerGroup({
 		// 	title: 'Data',
 		// 	layers: [

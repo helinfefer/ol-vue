@@ -13,6 +13,7 @@
     import OSM from 'ol/source/OSM';
     import TileLayer from 'ol/layer/Tile'
     import LayerSwitcher from 'ol-layerswitcher';
+    import { mapState } from 'vuex';
 
     export default {
       name:'ReusableMapComponent',
@@ -31,14 +32,14 @@
           type: Number,
           default: 10
         },
-        layerGroup: {
-          type: Object,
-          default: null
-        },
-        layerGroupName:{
-          type:Array,
-          default:()=>[]
-        },
+        // layerGroup: {
+        //   type: Object,
+        //   default: null
+        // },
+        // layerGroupName:{
+        //   type:Array,
+        //   default:()=>[]
+        // },
       },
 
       methods: {
@@ -83,12 +84,11 @@
         this.initializeMap();
         // this.updateLayerGroup();
       },
-      // watch:{
-      //   layerGroup:{
-      //     handler: 'updateLayerGroup',   
-      //     deep: true
-      //   }
-      // }
+    computed:{
+      ...mapState([
+            'layerGroup',
+      ]),
+    }
     }
 </script>
 
