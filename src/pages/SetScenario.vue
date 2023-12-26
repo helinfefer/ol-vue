@@ -31,14 +31,14 @@
       </el-form-item>
   
       <el-form-item label="住宅空置率">
-        <el-input-number v-model="form.residentialVacancyRate" :min="0" :max="1" step="0.01"></el-input-number>
+        <el-input-number v-model="form.residentialVacancyRate" :min="0" :max="1" :step="0.01"></el-input-number>
       </el-form-item>
       
       <el-form-item label="家庭增长率">
         <hr/>
       </el-form-item>
       <el-form-item label="家庭增长率">
-        <el-input-number v-model="form.householdGrowthRate" :min="0" :max="1" step="0.01"></el-input-number>
+        <el-input-number v-model="form.householdGrowthRate" :min="0" :max="1" :step="0.01"></el-input-number>
       </el-form-item>
   
       <!-- 中间添加 "or" 文本 -->
@@ -47,10 +47,10 @@
       <!-- 家庭总控制文件输入框 -->
 
 
-    <el-form-item label="家庭控制总量:" prop="csv">
+    <el-form-item label="家庭控制总量:" >
       <el-upload
           class="upload-demo"
-          action="http://localhost:5000/upload_data/rsh"
+          action="http://localhost:5000/upload_data/householdControl"
           accept=".csv"
           :on-success="handleSuccess"
           :on-error="handleError"     
@@ -63,7 +63,7 @@
         <hr/>
       </el-form-item>
       <el-form-item label="就业增长率">
-        <el-input-number v-model="form.employmentGrowthRate" :min="0" :max="1" step="0.01"></el-input-number>
+        <el-input-number v-model="form.employmentGrowthRate" :min="0" :max="1" :step="0.01"></el-input-number>
       </el-form-item>
     
       <!-- 中间添加 "or" 文本 -->
@@ -100,13 +100,27 @@
       </el-form-item>
 
       <el-form-item label="交通模型阻抗skims">
-        <el-input type="file" v-model="form.travelSkims" ></el-input>
+        <el-upload
+            class="upload-demo"
+            action="http://localhost:5000/upload_data/skims"
+            multiple
+            :limit="3"
+            :file-list="fileList">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        </el-upload>
       </el-form-item>
 
       <el-form-item label="交通模型网络">
-        <el-input type="file" v-model="form.travelNetworks"></el-input>
-      </el-form-item>      
-      
+        <el-upload
+            class="upload-demo"
+            action="http://localhost:5000/upload_data/travelNetworks"
+            multiple
+            :limit="3"
+            :file-list="fileList">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        </el-upload>
+      </el-form-item>
+
       <!-- 大文本区域 -->
       <el-form-item label="备注">
         <el-input type="textarea" v-model="form.notes"></el-input>
@@ -130,6 +144,7 @@
             <!-- 这里添加选项 -->
           </el-select>
         </el-form-item>
+        
         <el-form-item>
           <el-button @click="cancel">取消</el-button>
           <el-button type="primary" @click="save">保存</el-button>
@@ -146,6 +161,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: "SetScenario",
   data() {
@@ -176,10 +192,20 @@ export default {
     handleError(err, file) {
             console.log('文件上传错误！', err, file);
         },
+
     save() {
-      // 在这里添加保存表单的逻辑
-      console.log('Form submitted:', this.form);
-    },
+      console.log(this.form);
+      axios.post('http://localhost:5000/set/setsenario', this.form)
+          .then(response => {
+              // 处理响应
+              this.status = response.data.status; 
+              console.log(this.status);
+          })
+          .catch(error => {
+              // Handle any errors here
+              console.error('Error:', error);
+          });
+        },
     cancel() {
       // 在这里添加取消表单编辑的逻辑
       console.log('Form reset');

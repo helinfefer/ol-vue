@@ -112,7 +112,8 @@
       // }
       orcaBack(){
         console.log("清除缓存");
-          axios.post('http://localhost:5000/run/orcaBack').then(response =>{
+          axios.post('http://localhost:5000/run/orcaBack')
+          .then(response =>{
                 // 处理响应
                 this.msg = response.data.msg; 
                 console.log(this.msg)

@@ -24,29 +24,14 @@
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
                 :before-remove="beforeRemove"
-
                 :file-list="uploadJobControlFileList"
                 :on-success="uploadJobControlFileSuccess"
+                accept=".csv"
                 >
                 <el-button slot="trigger" size="small" type="primary" >选取文件</el-button>
             </el-upload>
           </el-form-item>
 
-          <el-form-item label="模型基础数据Model Base Data:">
-            <el-upload
-                class="upload-demo"
-                action="http://localhost:5000/upload_data/employControl"
-                multiple
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :before-remove="beforeRemove"
-
-                :file-list="uploadJobControlFileList"
-                :on-success="uploadJobControlFileSuccess"
-                >
-                <el-button slot="trigger" size="small" type="primary" >选取文件</el-button>
-            </el-upload>
-          </el-form-item>
           
           <el-form-item label="家庭控制总量:" >
             <el-upload
@@ -61,6 +46,23 @@
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
           </el-form-item>
+          
+          <el-form-item label="模型基础数据:">
+            <el-upload
+                class="upload-demo"
+                action="http://localhost:5000/upload_geo_data/basedata"
+                multiple
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+                :file-list="uploadBaseDataFileList"
+                :on-success="uploadBaseDataFileSuccess"
+                accept=".geojson"
+                >
+                <el-button slot="trigger" size="small" type="primary" >选取文件</el-button>
+            </el-upload>
+          </el-form-item>
+
 <!-- 
           <el-form-item label="Zoning:" >
             <el-upload
@@ -212,6 +214,7 @@ export default {
         return{
           uploadJobControlFileList:[],
           uploadHouseholdControlFileList:[],
+          uploadBaseDataFileList:[],
           form:{
             },
             searchQuery:null,
@@ -232,7 +235,6 @@ export default {
           beforeRemove(file) {
             return this.$confirm(`确定移除 ${ file.name }？`);
           },
-        
 
         uploadJobControlFileSuccess(file,fileList){
           // dispatch
@@ -245,8 +247,13 @@ export default {
           console.log('*************ADDHouseholdFILE',file,'*************',fileList)
           this.$store.dispatch('addHouseholdControlFile',fileList)
           // this.$store.commit('ADDFILE', this.uploadJobControlFileList)
-        }
+        },
 
+        uploadBaseDataFileSuccess(file,fileList) {
+          // 主要是基础地理数据的处理
+          console.log("🚀 ~ file: UploadData.vue:253 ~ uploadBaseDataFileSuccess ~ ADDBaseDataFILE:", file)
+          this.$store.dispatch('addBaseDataFile',fileList)
+        }
     },
     mounted(){
     }

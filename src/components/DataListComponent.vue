@@ -38,8 +38,8 @@ export default {
             // 将数据传给$store.state.selectedFileUid,跳过dispatch,直接commit调用mutation函数
             this.$store.commit('CHANGESELETEDFILEUID',data)
             // 请求数据
-            this.$store.dispatch('fetchDataFromBackend','stop_bus');
-            
+            console.log("🚀 ~ file: DataListComponent.vue:42 ~ handleNodeClick ~ data:", data)
+            this.$store.dispatch('fetchDataFromBackend',data.label);
         }
       }
     },
