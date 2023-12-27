@@ -38,7 +38,7 @@ export default {
             // 这是非一级节点
             console.log('Clicked a non-root level node');
             // 将数据传给$store.state.selectedFileUid,跳过dispatch,直接commit调用mutation函数
-            this.$store.commit('CHANGESELETEDFILEUID',data)
+            this.$store.commit('CHANGE_SELETED_FILE_UID',data)
             // 请求数据
             console.log("🚀 ~ file: DataListComponent.vue:42 ~ handleNodeClick ~ data:", data)
             this.$store.dispatch('fetchDataFromBackend',data.label);

@@ -62,6 +62,10 @@
                     <el-menu-item index="2-1-6">
                       <router-link to="/ums/developer">开发商模型</router-link>
                     </el-menu-item>
+                    <el-menu-item index="2-1-7">
+                      <router-link to="/ums/constrains">ConstrainsPage</router-link>
+                    </el-menu-item>
+
                 </el-submenu>
 
                 <el-submenu index="2-2">

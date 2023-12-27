@@ -15,8 +15,8 @@
 
       <!-- 页码组件 -->
       <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        @size-change="HANDLE_SIZE_CHANGE"
+        @current-change="HANDLE_CURRENT_CHANGE"
         :current-page="$store.state.currentPage"
         :page-sizes="[10, 20, 50, 100]"
         :page-size="$store.state.pageSize"
@@ -33,27 +33,40 @@ import { mapGetters } from 'vuex';
 export default {
   name:"ReusableTableComponent",
   components:{},
+  // props:{
+  //   'dataFromParent': {
+  //       type: Array,
+  //       default: function() {
+  //         return [];
+  //     },
+  // },
+  // },
   data(){
     return{
     }
   },
-  props:{
-    dataFromParent: Array,
-    default: () => []  // 默认值为空数组
-  }, //在子组件中定义prop来接受父组件传递的数据，并将这个prop命名为dataFromParent
   methods:{
-    handleCurrentChange(newPage) {
-      this.$store.commit('HANDLECURRENTCHANGE',newPage)
+    HANDLE_CURRENT_CHANGE(newPage) {
+      this.$store.commit('HANDLE_CURRENT_CHANGE',newPage)
     },
-    handleSizeChange(newSize) {
-      this.$store.commit('HANDLESIZECHANGE',newSize)
+    HANDLE_SIZE_CHANGE(newSize) {
+      this.$store.commit('HANDLE_SIZE_CHANGE',newSize)
     }
   },
   computed:{
+    // table组件的展示内容还是用父组件传递过来的比较好
     ...mapGetters(['paginatedData'])
   },
   created(){
-    // this.$store.commit('SLICETABLEDATA')
-  }
+  },
+  watch: {
+    'dataFromParent': {
+      handler(newValue, oldValue) {
+        // 处理状态变化
+        console.log("🚀 ~ file: ReusableTableComponent.vue:68 ~ handler ~ newValue:", newValue,oldValue)
+      },
+      deep: true // 如果需要深度观察对象内部的变化
+    }
+  },
 }
 </script>

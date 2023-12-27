@@ -12,17 +12,17 @@ import GeoJSON from 'ol/format/GeoJSON';
 Vue.use(Vuex);
 // 准备actions功能，actions 用于响应组件中的动作
 const actions = {
-    addJobControlFile(miniStore,file){
-        console.log('actions addJobControlFile 被调用',file); 
-        miniStore.commit('ADDJOBCONTROLFILE',file);
+    ADD_JOB_CONTROL_FILE(miniStore,file){
+        console.log('actions ADD_JOB_CONTROL_FILE 被调用',file); 
+        miniStore.commit('ADD_JOB_CONTROL_FILE',file);
     },
-    addHouseholdControlFile(miniStore,file){
-        console.log('actions addHouseholdControlFile 被调用',file); 
-        miniStore.commit('ADDHOUSEHOLDCONTROLFILE',file);
+    ADD_HOUSEHOLD_CONTROL_FILE(miniStore,file){
+        console.log('actions ADD_HOUSEHOLD_CONTROL_FILE 被调用',file); 
+        miniStore.commit('ADD_HOUSEHOLD_CONTROL_FILE',file);
     },
-    addBaseDataFile(miniStore,file){
-        console.log('actions addBaseDataFile 被调用',file); 
-        miniStore.commit('ADDBASEDATAFILE',file);
+    ADD_BASE_DATA_FILE(miniStore,file){
+        console.log('actions ADD_BASE_DATA_FILE 被调用',file); 
+        miniStore.commit('ADD_BASE_DATA_FILE',file);
     },
     // 获取地图展示数据
     loadMapData(miniStore) {
@@ -64,13 +64,13 @@ const actions = {
             if(dataset.split('.')[1]==='csv'){
                 const response = await axios.get(`http://localhost:5000/get-data/${filename}`);
                 console.log("🚀 ~ file: index.js:39 ~ fetchDataFromBackend ~ response:", response)
-                miniStore.commit('CHANGEDATASHOWONTABLE',response.data);
+                miniStore.commit('CHANGE_DATA_SHOW_ONTABLE',response.data);
                 
             }
             else if(dataset.split('.')[1]==='geojson'){
                 const response = await axios.get(`http://localhost:5000/get-geo-data/${filename}`);
                 console.log("🚀 ~ file: index.js:39 ~ fetchDataFromBackend ~ response:", response.data)
-                miniStore.commit('CHANGEDATASHOWONTABLE',response.data.features);
+                miniStore.commit('CHANGE_DATA_SHOW_ONTABLE',response.data.features);
                 miniStore.commit('SET_LAYER_GROUP',response);
             }
             
@@ -102,9 +102,9 @@ const mutations = {
         console.log("🚀 ~ file: index.js:98 ~ SET_LAYER_GROUP ~ geojsonData:", geojsonData)
         
     },
-    ADDJOBCONTROLFILE(state, jobControlsFile){
+    ADD_JOB_CONTROL_FILE(state, jobControlsFile){
         state.uploadJobControlFileList = state.uploadJobControlFileList.concat(jobControlsFile)
-        console.log('ADDJOBCONTROLFILE mutation************',state.uploadJobControlFileList)
+        console.log('ADD_JOB_CONTROL_FILE mutation************',state.uploadJobControlFileList)
         var elTreeJobDataItem = {
             'label': jobControlsFile.name,
             'uid':jobControlsFile.uid,
@@ -112,9 +112,9 @@ const mutations = {
         }
         state.elTreeData[0]['children'].push(elTreeJobDataItem)
     },
-    ADDHOUSEHOLDCONTROLFILE(state, householdControlsFile){
+    ADD_HOUSEHOLD_CONTROL_FILE(state, householdControlsFile){
         state.uploadHouseholdsControlFileList = state.uploadHouseholdsControlFileList.concat(householdControlsFile)
-        console.log('ADDHOUSEHOLDCONTROLFILE mutation************',state.uploadHouseholdsControlFileList)
+        console.log('ADD_HOUSEHOLD_CONTROL_FILE mutation************',state.uploadHouseholdsControlFileList)
         var elTreeHouseholdsDataItem = {
             'label': householdControlsFile.name,
             'uid':householdControlsFile.uid,
@@ -123,9 +123,9 @@ const mutations = {
         state.elTreeData[1]['children'].push(elTreeHouseholdsDataItem)
 
     },
-    ADDBASEDATAFILE(state, baseDataFile){
+    ADD_BASE_DATA_FILE(state, baseDataFile){
         state.uploadBaseDataFileList = state.uploadBaseDataFileList.concat(baseDataFile)
-        console.log('ADDBASEDATAFILE mutation************',state.uploadBaseDataFileList)
+        console.log('ADD_BASE_DATA_FILE mutation************',state.uploadBaseDataFileList)
         var elTreeBaseDataItem = {
             'label': baseDataFile.name,
             'uid':baseDataFile.uid,
@@ -135,27 +135,27 @@ const mutations = {
 
     },
 
-    CHANGESELETEDFILEUID(state, changedFile){
-        console.log("🚀 ~ file: index.js:52 ~ CHANGESELETEDFILEUID ~ changedFile:", changedFile)
+    CHANGE_SELETED_FILE_UID(state, changedFile){
+        console.log("🚀 ~ file: index.js:52 ~ CHANGE_SELETED_FILE_UID ~ changedFile:", changedFile)
         // 更新当前选择的数据，后面根据这个selectedFileUid 来请求数据库
         state.selectedFileUid = changedFile.uid;
         state.selectedFileName = changedFile.label
     },
     // 修改table组件中的展示数据
-    CHANGEDATASHOWONTABLE(state,data){
+    CHANGE_DATA_SHOW_ONTABLE(state,data){
         state.dataShowOnTable = data
-        console.log("🚀 ~ file: index.js:67 ~ CHANGEDATASHOWONTABLE ~ response:", data)
+        console.log("🚀 ~ file: index.js:67 ~ CHANGE_DATA_SHOW_ONTABLE ~ response:", data)
     },
-    HANDLECURRENTCHANGE(state,newPage){
+    HANDLE_CURRENT_CHANGE(state,newPage){
         state.currentPage = newPage
-        console.log("🚀 ~ file: index.js:85 ~ HANDLECURRENTCHANGE ~ currentPage:", state.currentPage)
+        console.log("🚀 ~ file: index.js:85 ~ HANDLE_CURRENT_CHANGE ~ currentPage:", state.currentPage)
     },
 
-    HANDLESIZECHANGE(state,newSize){
+    HANDLE_SIZE_CHANGE(state,newSize){
         state.pageSize = newSize;
         state.currentPage = 1; // 重置到第一页
-        console.log("🚀 ~ file: index.js:89 ~ HANDLESIZECHANGE ~ pageSize:", state.pageSize)
-        console.log("🚀 ~ file: index.js:85 ~ HANDLECURRENTCHANGE ~ currentPage:", state.currentPage)
+        console.log("🚀 ~ file: index.js:89 ~ HANDLE_SIZE_CHANGE ~ pageSize:", state.pageSize)
+        console.log("🚀 ~ file: index.js:85 ~ HANDLE_CURRENT_CHANGE ~ currentPage:", state.currentPage)
     },
   };
   
@@ -169,6 +169,7 @@ const getters = {
         return state.dataShowOnTable.slice(start, end);
     },
 }
+
 // 准备 state  功能， state 用于存储数据
 const state = {
     message:'hello world',

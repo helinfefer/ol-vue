@@ -18,6 +18,7 @@ import MapOlFeasibility from '../pages/MapOlFeasibility.vue'
 import TwoLayerIndex from '../pages/TwoLayerIndex.vue'
 import SetScenario from '../pages/SetScenario.vue'
 import UploadData from '../pages/UploadData.vue'
+import ConstrainsPage from '../pages/ConstrainsPage.vue';
 
 export default new VueRouter({
     routes: [
@@ -50,6 +51,10 @@ export default new VueRouter({
             path:'/ums',
             component: RunUms,
             children:[
+                {
+                    path:'constrains',
+                    component:ConstrainsPage
+                },
                 {
                     path:'tansitionmodel',
                     component:TransitionModel
