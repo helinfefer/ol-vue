@@ -2,6 +2,8 @@
 import Vue from 'vue';
 // 引入Vuex
 import Vuex from 'vuex';
+import createPersistedState from 'vuex-persistedstate';
+
 import axios from 'axios';
 import LayerGroup from 'ol/layer/Group'
 import VectorLayer from 'ol/layer/Vector';
@@ -13,17 +15,14 @@ const actions = {
     addJobControlFile(miniStore,file){
         console.log('actions addJobControlFile 被调用',file); 
         miniStore.commit('ADDJOBCONTROLFILE',file);
-        localStorage.setItem('JobControlFile',file.name);
     },
     addHouseholdControlFile(miniStore,file){
         console.log('actions addHouseholdControlFile 被调用',file); 
         miniStore.commit('ADDHOUSEHOLDCONTROLFILE',file);
-        localStorage.setItem('HouseholdControlFile',file.name);
     },
     addBaseDataFile(miniStore,file){
         console.log('actions addBaseDataFile 被调用',file); 
         miniStore.commit('ADDBASEDATAFILE',file);
-        localStorage.setItem('BaseDataFile',file.name);
     },
     // 获取地图展示数据
     loadMapData(miniStore) {
@@ -180,27 +179,29 @@ const state = {
     elTreeData: [{
         label: '就业控制总量',
         level: 1,
-        children: [{
-            label: '就业控制总量',
-            uid:'01',
-            level: 2,
-        }]
+        children: [
+                // {
+                //     label: '就业控制总量',
+                //     uid:'01',
+                //     level: 2,
+                // }
+            ]
         }, {
         label: '家庭控制总量',
         level: 1,
-        children: [{
-            label: '家庭控制总量 ',
-            uid:'02',
-            level: 2,
-        }]
+        children: [
+        //     {
+        //     label: '家庭控制总量 ',
+        //     uid:'02',
+        //     level: 2,
+        // }
+            ]
         },{
         label: '模型基础数据',
         level: 1,
-        children: [{
-            label: '模型基础数据 ',
-            uid:'03',
-            level: 2,
-            }]
+        children: [
+            
+            ]
             }],
     selectedFileUid:'xx',
     selectedFileName:null,
@@ -214,6 +215,9 @@ const state = {
     layerGroup: null, // 初始状态为null
     // 其他状态...
 }
+const plugins=[createPersistedState(
+    {paths: ['elTreeData','uploadJobControlFileList', 'uploadHouseholdsControlFileList', 'uploadBaseDataFileList']}
+)]
 
 
 // 创建store 并暴露store
@@ -222,4 +226,5 @@ export default new Vuex.Store({
     mutations:mutations,
     state:state,
     getters:getters,
+    plugins:plugins,
 })
