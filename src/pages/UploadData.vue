@@ -241,22 +241,25 @@ export default {
           console.log('*************ADDJOBFILE',file,'*************',fileList)
           this.$store.dispatch('addJobControlFile',fileList)
           // this.$store.commit('ADDFILE', this.uploadJobControlFileList)
+          console.log("🚀 ~ file: UploadData.vue:245 ~ uploadJobControlFileSuccess ~ localStorage:", fileList)
         },
         uploadHouseholdControlFileSuccess(file,fileList){
           // dispatch
           console.log('*************ADDHouseholdFILE',file,'*************',fileList)
           this.$store.dispatch('addHouseholdControlFile',fileList)
           // this.$store.commit('ADDFILE', this.uploadJobControlFileList)
+
         },
 
         uploadBaseDataFileSuccess(file,fileList) {
           // 主要是基础地理数据的处理
           console.log("🚀 ~ file: UploadData.vue:253 ~ uploadBaseDataFileSuccess ~ ADDBaseDataFILE:", file)
+          console.log("🚀 ~ file: UploadData.vue:259 ~ uploadBaseDataFileSuccess ~ fileList:", fileList)
           this.$store.dispatch('addBaseDataFile',fileList)
         }
     },
-    mounted(){
-    }
+    mounted() {
+  }
 };
 </script>
 

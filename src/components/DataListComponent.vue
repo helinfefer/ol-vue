@@ -2,7 +2,9 @@
 <template >
     <div>
         <el-tree :data="$store.state.elTreeData" :props="defaultProps" @node-click="handleNodeClick"
-        :default-expand-all="true"></el-tree>
+        :default-expand-all="true"
+        :highlight-current="true"
+        ></el-tree>
         <p>当前选择的文件是：{{$store.state.selectedFileUid}}</p>
     </div>    
 </template>
