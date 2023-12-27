@@ -19,7 +19,7 @@ import TwoLayerIndex from '../pages/TwoLayerIndex.vue'
 import SetScenario from '../pages/SetScenario.vue'
 import UploadData from '../pages/UploadData.vue'
 import ConstrainsPage from '../pages/ConstrainsPage.vue';
-
+import DataBaseCollections from '../pages/DataBaseCollections.vue';
 export default new VueRouter({
     routes: [
         {
@@ -56,6 +56,11 @@ export default new VueRouter({
                     component:ConstrainsPage
                 },
                 {
+                    path:'collections',
+                    component:DataBaseCollections
+                },
+                
+                {
                     path:'tansitionmodel',
                     component:TransitionModel
                 },
@@ -89,6 +94,7 @@ export default new VueRouter({
                     path:'upload',
                     component:UploadData
                 },
+
 
             ]
         },

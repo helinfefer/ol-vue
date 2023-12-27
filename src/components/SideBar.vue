@@ -65,7 +65,9 @@
                     <el-menu-item index="2-1-7">
                       <router-link to="/ums/constrains">ConstrainsPage</router-link>
                     </el-menu-item>
-
+                    <el-menu-item index="2-1-8">
+                      <router-link to="/ums/collections">BaseDataCollections</router-link>
+                    </el-menu-item>
                 </el-submenu>
 
                 <el-submenu index="2-2">
