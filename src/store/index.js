@@ -180,6 +180,7 @@ const state = {
     elTreeData: [{
         label: '就业控制总量',
         level: 1,
+        uid:0,
         children: [
                 // {
                 //     label: '就业控制总量',
