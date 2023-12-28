@@ -239,23 +239,23 @@ export default {
         uploadJobControlFileSuccess(file,fileList){
           // dispatch
           console.log('*************ADDJOBFILE',file,'*************',fileList)
-          this.$store.dispatch('ADD_JOB_CONTROL_FILE',fileList)
+          this.$store.dispatch('add_job_control_file',fileList)
           // this.$store.commit('ADDFILE', this.uploadJobControlFileList)
           console.log("🚀 ~ file: UploadData.vue:245 ~ uploadJobControlFileSuccess ~ localStorage:", fileList)
         },
         uploadHouseholdControlFileSuccess(file,fileList){
           // dispatch
           console.log('*************ADDHouseholdFILE',file,'*************',fileList)
-          this.$store.dispatch('ADD_HOUSEHOLD_CONTROL_FILE',fileList)
+          this.$store.dispatch('add_household_control_file',fileList)
           // this.$store.commit('ADDFILE', this.uploadJobControlFileList)
 
         },
 
         uploadBaseDataFileSuccess(file,fileList) {
           // 主要是基础地理数据的处理
-          console.log("🚀 ~ file: UploadData.vue:253 ~ uploadBaseDataFileSuccess ~ ADD_BASE_DATA_FILE:", file)
+          console.log("🚀 ~ file: UploadData.vue:253 ~ uploadBaseDataFileSuccess ~ add_base_data_file:", file)
           console.log("🚀 ~ file: UploadData.vue:259 ~ uploadBaseDataFileSuccess ~ fileList:", fileList)
-          this.$store.dispatch('ADD_BASE_DATA_FILE',fileList)
+          this.$store.dispatch('add_base_data_file',fileList)
         }
     },
     mounted() {

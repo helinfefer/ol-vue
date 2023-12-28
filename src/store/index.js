@@ -12,22 +12,21 @@ import GeoJSON from 'ol/format/GeoJSON';
 Vue.use(Vuex);
 // 准备actions功能，actions 用于响应组件中的动作
 const actions = {
-    ADD_JOB_CONTROL_FILE(miniStore,file){
-        console.log('actions ADD_JOB_CONTROL_FILE 被调用',file); 
+    add_job_control_file(miniStore,file){
+        console.log('actions add_job_control_file 被调用',file); 
         miniStore.commit('ADD_JOB_CONTROL_FILE',file);
     },
-    ADD_HOUSEHOLD_CONTROL_FILE(miniStore,file){
-        console.log('actions ADD_HOUSEHOLD_CONTROL_FILE 被调用',file); 
+    add_household_control_file(miniStore,file){
+        console.log('actions add_household_control_file 被调用',file); 
         miniStore.commit('ADD_HOUSEHOLD_CONTROL_FILE',file);
     },
-    ADD_BASE_DATA_FILE(miniStore,file){
-        console.log('actions ADD_BASE_DATA_FILE 被调用',file); 
+    add_base_data_file(miniStore,file){
+        console.log('actions add_base_data_file 被调用',file); 
         miniStore.commit('ADD_BASE_DATA_FILE',file);
     },
     // 获取地图展示数据
     loadMapData(miniStore) {
         // 获取图层数据
-        console.log("🚀 ~ file: index.js:57 ~ loadMapData ~ loadMapData:")
         const layerGroup = new LayerGroup({
 			title: 'Data',
 			layers: [
@@ -56,20 +55,17 @@ const actions = {
     // 请求数据 
     
     async fetchDataFromBackend(miniStore,dataset) {
-        console.log("🚀 ~ file: index.js:22 ~ fetchDataFromBackend ~ dataset:", dataset)
         try {
             const filename = dataset.split('.')[0]
             console.log('getdata: ' + filename)
             //   后端返回
             if(dataset.split('.')[1]==='csv'){
                 const response = await axios.get(`http://localhost:5000/get-data/${filename}`);
-                console.log("🚀 ~ file: index.js:39 ~ fetchDataFromBackend ~ response:", response)
                 miniStore.commit('CHANGE_DATA_SHOW_ONTABLE',response.data);
                 
             }
             else if(dataset.split('.')[1]==='geojson'){
                 const response = await axios.get(`http://localhost:5000/get-geo-data/${filename}`);
-                console.log("🚀 ~ file: index.js:39 ~ fetchDataFromBackend ~ response:", response.data)
                 miniStore.commit('CHANGE_DATA_SHOW_ONTABLE',response.data.features);
                 miniStore.commit('SET_LAYER_GROUP',response);
             }
@@ -99,7 +95,6 @@ const mutations = {
         const newVectorLayer = new VectorLayer({source: vectorSource,title: newTitle})
         // 添加到图层中
         state.layerGroup.getLayers().push(newVectorLayer);
-        console.log("🚀 ~ file: index.js:98 ~ SET_LAYER_GROUP ~ geojsonData:", geojsonData)
         
     },
     ADD_JOB_CONTROL_FILE(state, jobControlsFile){
@@ -136,7 +131,6 @@ const mutations = {
     },
 
     CHANGE_SELETED_FILE_UID(state, changedFile){
-        console.log("🚀 ~ file: index.js:52 ~ CHANGE_SELETED_FILE_UID ~ changedFile:", changedFile)
         // 更新当前选择的数据，后面根据这个selectedFileUid 来请求数据库
         state.selectedFileUid = changedFile.uid;
         state.selectedFileName = changedFile.label
@@ -144,18 +138,14 @@ const mutations = {
     // 修改table组件中的展示数据
     CHANGE_DATA_SHOW_ONTABLE(state,data){
         state.dataShowOnTable = data
-        console.log("🚀 ~ file: index.js:67 ~ CHANGE_DATA_SHOW_ONTABLE ~ response:", data)
     },
     HANDLE_CURRENT_CHANGE(state,newPage){
         state.currentPage = newPage
-        console.log("🚀 ~ file: index.js:85 ~ HANDLE_CURRENT_CHANGE ~ currentPage:", state.currentPage)
     },
 
     HANDLE_SIZE_CHANGE(state,newSize){
         state.pageSize = newSize;
         state.currentPage = 1; // 重置到第一页
-        console.log("🚀 ~ file: index.js:89 ~ HANDLE_SIZE_CHANGE ~ pageSize:", state.pageSize)
-        console.log("🚀 ~ file: index.js:85 ~ HANDLE_CURRENT_CHANGE ~ currentPage:", state.currentPage)
     },
   };
   
@@ -165,7 +155,6 @@ const getters = {
     paginatedData: (state) => {
         const start = (state.currentPage - 1) * state.pageSize;
         const end = start + state.pageSize;
-        console.log("🚀 ~ file: index.js:96 ~ paginatedData:", state.dataShowOnTable.slice(start, end))
         return state.dataShowOnTable.slice(start, end);
     },
 }

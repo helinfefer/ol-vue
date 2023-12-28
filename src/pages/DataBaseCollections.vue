@@ -116,7 +116,7 @@
 
 
       </el-row>
-      <el-table :data="tableData" stripe style="width: 100%">
+      <el-table :data=" baseDataCollections" stripe style="width: 100%">
         <el-table-column prop="id" label="ID" width="50"></el-table-column>
         <el-table-column prop="name" label="Name"></el-table-column>
         <el-table-column prop="year" label="Year" width="100"></el-table-column>
@@ -161,7 +161,6 @@
             year: '',
             notes: ''
         },
-
         secondaryDialogVisible: false,
         dataCollectionDialogVisible: false,
         dataSelectionDialogVisible:false,
@@ -169,7 +168,7 @@
           children: 'children',
           label: 'label'
         },
-        tableData: [
+         baseDataCollections: [
           {
             id: 1,
             name: 'Parcel initialization',
@@ -211,12 +210,11 @@
     methods: {
         
         goToNextStep() {
+            // 首先，确保当前是在 "Details" 步骤
             if (this.activeStep === 0) {
-                this.activeStep = 1;
-                this.dataCollectionDialogVisible = false;
-                this.$nextTick(() => {
-                this.dataSelectionDialogVisible = true;
-                });
+                this.activeStep = 1; // 设置活跃步骤为 "Data Selection"
+                this.dataSelectionDialogVisible = true; // 打开数据选择对话框
+                this.dataCollectionDialogVisible = false; // 关闭当前的详情对话框
             }
         },
         handleClose(done) {
@@ -251,6 +249,19 @@
             // Logic to handle completion of data selection
             console.log('Data selection completed with: ', this.form);
             // You would likely close the dialog or go to the next step here
+            // 需要在 base data collections 表格中增加一个条目
+            this.baseDataCollections.push({
+                // 根据你表格数据的结构添加数据
+                id: this.generateUniqueId(), // 一个函数用来生成唯一的 ID
+                name: this.form.name,
+                type: this.form.type,
+                basedOn: this.form.basedOn,
+                year: this.form.year,
+                notes: this.form.notes,
+                // ... 其他可能的表单字段
+            });
+                
+
         },
         cancelDataSelection(){
             this.dataSelectionDialogVisible = false;
