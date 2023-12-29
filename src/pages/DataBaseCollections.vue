@@ -149,6 +149,8 @@
   </template>
   
   <script>
+  import { v4 as uuidv4 } from 'uuid';
+
   export default {
     data() {
       return {
@@ -250,9 +252,11 @@
             console.log('Data selection completed with: ', this.form);
             // You would likely close the dialog or go to the next step here
             // 需要在 base data collections 表格中增加一个条目
+            const uniqueId = uuidv4();
+
             this.baseDataCollections.push({
                 // 根据你表格数据的结构添加数据
-                id: this.generateUniqueId(), // 一个函数用来生成唯一的 ID
+                id: uniqueId, // 一个函数用来生成唯一的 ID
                 name: this.form.name,
                 type: this.form.type,
                 basedOn: this.form.basedOn,
