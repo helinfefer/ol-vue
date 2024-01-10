@@ -16,7 +16,7 @@
               <el-menu-item-group>
                 <span slot="title">map</span>
                 <el-menu-item index="1-1">
-                  <router-link to="/openlayers">openlayers</router-link>
+                  <router-link to="/openlayers">数据编辑</router-link>
                 </el-menu-item>
                 <el-menu-item index="1-2">
                   <router-link to="/mapbox">mapbox</router-link>

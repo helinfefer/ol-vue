@@ -5,7 +5,7 @@
         <b-nav-item @click="changeDataSource('buildings')">buildings</b-nav-item>
         <b-nav-item @click="changeDataSource('parcels')">parcels</b-nav-item>
         <b-nav-item @click="changeDataSource('zoning')">zoning</b-nav-item>
-        <b-nav-item @click="changeDataSource('edges')">edges</b-nav-item>
+        <b-nav-item @click="changeDataSource('road_edges')">roadEdges</b-nav-item>
       </b-nav>
       <!-- 给ToolsBar的Vc身上绑定一个事件 -->
       <!-- 给谁绑的事件，就去找谁触发去  -->
@@ -93,7 +93,7 @@
 
             if (!this.layers[dataSource]){
               console.log(dataSource)
-              const response = await axios.get(`http://localhost:5000/data/${dataSource}`);
+              const response = await axios.get(`http://localhost:5000/get-geo-data/${dataSource}`);
               const geojsonData = response.data;
               console.log(geojsonData);
 

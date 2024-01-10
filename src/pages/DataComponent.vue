@@ -63,7 +63,7 @@ export default {
     async fetchData(dataset) {
       try {
         console.log('getdata: ' + dataset)
-        const response = await axios.get(`http://localhost:5000/data/${dataset}`);
+        const response = await axios.get(`http://localhost:5000/get-data/${dataset}`);
         this.data = response.data
         console.log(this.data)
         console.log(typeof this.data)

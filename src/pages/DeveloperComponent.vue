@@ -28,7 +28,7 @@
         <br>
         <span> 对所有地块执行开发可行性分析，即效益计算，返回feasibility表格</span>
         <!--  MapOl作为子组件，传送feasibility 数据给它。-->
-        <MapOl :feasibilityData = "feasibilityData"></MapOl>
+        <!-- <MapOl :feasibilityData = "feasibilityData"></MapOl> -->
         <br>
 
         <!-- 开发商模型发送给地图子组件的数据 -->
@@ -118,7 +118,7 @@
                 // this.msgHLCM = response.data.msg;
                 // this.plotData = this.householdsTable 
                 this.developerData = response.data.geojson_plot_data; 
-                console.log("runRetailDeveloper ",this.developerData)
+                // console.log("runRetailDeveloper ",this.developerData)
             })
         },
         runOfficeDeveloper(){
@@ -130,7 +130,7 @@
                 // this.msgHLCM = response.data.msg;
                 // this.plotData = this.householdsTable 
                 this.developerData = response.data.geojson_plot_data; 
-                console.log("runOfficeDeveloper ",this.developerData)
+                // console.log("runOfficeDeveloper ",this.developerData)
             })
         },
         runIndustrialDeveloper(){
@@ -142,7 +142,7 @@
                 // this.msgHLCM = response.data.msg;
                 // this.plotData = this.householdsTable 
                 this.developerData = response.data.geojson_plot_data; 
-                console.log("runOfficeDeveloper ",this.developerData)
+                // console.log("runOfficeDeveloper ",this.developerData)
             })
 
         },
