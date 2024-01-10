@@ -47,7 +47,24 @@
             </el-upload>
           </el-form-item>
           
-          <el-form-item label="模型基础数据:">
+
+
+<!-- 
+          <el-form-item label="Zoning:" >
+            <el-upload
+                class="upload-demo"
+                action="http://localhost:5000/upload_data/householdControl"
+                accept=".csv"
+                :on-success="handleSuccess"
+                :on-error="handleError"     
+                >
+                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            </el-upload>
+          </el-form-item> -->
+
+        <h2>Travel Model and Network Data</h2>
+
+          <el-form-item label="交通模型网络:">
             <el-upload
                 class="upload-demo"
                 action="http://localhost:5000/upload_geo_data/basedata"
@@ -62,31 +79,7 @@
                 <el-button slot="trigger" size="small" type="primary" >选取文件</el-button>
             </el-upload>
           </el-form-item>
-
-<!-- 
-          <el-form-item label="Zoning:" >
-            <el-upload
-                class="upload-demo"
-                action="http://localhost:5000/upload_data/householdControl"
-                accept=".csv"
-                :on-success="handleSuccess"
-                :on-error="handleError"     
-                >
-                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            </el-upload>
-          </el-form-item>
-
-        <h2>Travel Model and Network Data</h2>
-        <el-form-item label="交通模型网络">
-            <el-upload
-                class="upload-demo"
-                action="http://localhost:5000/upload_data/travelNetworks"
-                multiple
-                :limit="3"
-                :file-list="fileList">
-                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            </el-upload>
-          </el-form-item>
+          
 
           <el-form-item label="交通模型阻抗skims">
             <el-upload
@@ -111,7 +104,7 @@
           </el-form-item>
 
           <h2>Model Base Data</h2>
-
+<!-- 
           <el-form-item label="Parcel Geometry">
             <el-upload
                 class="upload-demo"
@@ -121,10 +114,41 @@
                 :file-list="fileList">
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
+          </el-form-item> -->
+
+          <el-form-item label="Buildings Geometry:">
+            <el-upload
+                class="upload-demo"
+                action="http://localhost:5000/upload_geo_data/basedata"
+                multiple
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+                :file-list="uploadBaseDataFileList"
+                :on-success="uploadBaseDataFileSuccess"
+                accept=".geojson"
+                >
+                <el-button slot="trigger" size="small" type="primary" >选取文件</el-button>
+            </el-upload>
           </el-form-item>
 
+          <el-form-item label="Parcel Geometry:">
+            <el-upload
+                class="upload-demo"
+                action="http://localhost:5000/upload_geo_data/basedata"
+                multiple
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+                :file-list="uploadBaseDataFileList"
+                :on-success="uploadBaseDataFileSuccess"
+                accept=".geojson"
+                >
+                <el-button slot="trigger" size="small" type="primary" >选取文件</el-button>
+            </el-upload>
+          </el-form-item>
           
-          <el-form-item label="Parcel Attributes">
+          <!-- <el-form-item label="Parcel Attributes">
             <el-upload
                 class="upload-demo"
                 action="http://localhost:5000/upload_data/skims"
@@ -133,9 +157,9 @@
                 :file-list="fileList">
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
-          </el-form-item>
+          </el-form-item> -->
           
-          <el-form-item label="Buildings">
+          <!-- <el-form-item label="Buildings">
             <el-upload
                 class="upload-demo"
                 action="http://localhost:5000/upload_data/skims"
@@ -144,8 +168,8 @@
                 :file-list="fileList">
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
-          </el-form-item>
-
+          </el-form-item> -->
+<!-- 
           <el-form-item label="Building Types">
             <el-upload
                 class="upload-demo"
@@ -155,7 +179,7 @@
                 :file-list="fileList">
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
-          </el-form-item>
+          </el-form-item> -->
 
           <el-form-item label="HouseHolds">
             <el-upload
@@ -199,7 +223,7 @@
                 :file-list="fileList">
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             </el-upload>
-          </el-form-item> -->
+          </el-form-item>
         </el-form>  
 
         <DataListComponent></DataListComponent>
