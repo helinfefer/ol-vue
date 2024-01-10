@@ -181,21 +181,27 @@
             </el-upload>
           </el-form-item> -->
 
-          <el-form-item label="HouseHolds">
+
+          <el-form-item label="HouseHolds:">
             <el-upload
                 class="upload-demo"
-                action="http://localhost:5000/upload_data/skims"
+                action="http://localhost:5000/upload_data/HouseHolds"
                 multiple
-                :limit="3"
-                :file-list="fileList">
-                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+                :file-list="uploadHouseholdFileList"
+                :on-success="uploadHouseholdFileSuccess"
+                accept=".csv"
+                >
+                <el-button slot="trigger" size="small" type="primary" >选取文件</el-button>
             </el-upload>
           </el-form-item>
 
           <el-form-item label="Persons">
             <el-upload
                 class="upload-demo"
-                action="http://localhost:5000/upload_data/skims"
+                action="http://localhost:5000/upload_data/Persons"
                 multiple
                 :limit="3"
                 :file-list="fileList">
@@ -239,6 +245,7 @@ export default {
           uploadJobControlFileList:[],
           uploadHouseholdControlFileList:[],
           uploadBaseDataFileList:[],
+          uploadHouseholdFileList:[],
           form:{
             },
             searchQuery:null,
@@ -280,7 +287,12 @@ export default {
           console.log("🚀 ~ file: UploadData.vue:253 ~ uploadBaseDataFileSuccess ~ add_base_data_file:", file)
           console.log("🚀 ~ file: UploadData.vue:259 ~ uploadBaseDataFileSuccess ~ fileList:", fileList)
           this.$store.dispatch('add_base_data_file',fileList)
+        },
+        uploadHouseholdFileSuccess(file,fileList) {
+          // 主要是基础地理数据的处理
+          this.$store.dispatch('add_base_data_file',fileList)
         }
+
     },
     mounted() {
   }
