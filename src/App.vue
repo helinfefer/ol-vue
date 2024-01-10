@@ -5,8 +5,9 @@
 		<el-header style="text-align: right;">
 			<el-button @click="goBack">Base Data Viewer</el-button>
 			<el-button @click="goToInputPage">上传数据</el-button>
-			<el-button @click="goToInputPage">Base Data Collections</el-button>
+			<el-button @click="goToCollectionPage">Base Data Collections</el-button>
 			<el-button @click="goToInputPage">开发项目</el-button>
+			<el-button @click="goToRunPage">运行RUN</el-button>
 		</el-header>
 		<el-main><router-view ></router-view></el-main>
 		<el-footer>Footer</el-footer>
@@ -32,7 +33,19 @@ export default {
 			if (this.$route.path !== '/') {
 			this.$router.push('/');
 			}
-		}
+		},
+		goToCollectionPage() {
+			if (this.$route.path !== '/ums/collections') {
+			this.$router.push('/ums/collections');
+			}
+		},
+		goToRunPage() {
+			if (this.$route.path !== '/ums/createrun') {
+			this.$router.push('/ums/createrun');
+			}
+		},
+
+
 	}
 }
 </script>
