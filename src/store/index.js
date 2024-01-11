@@ -182,6 +182,12 @@ const mutations = {
         console.log("🚀 ~ DELETE_DATA_COLLECTION ~ deleteIndex:", deleteIndex)
         state.baseDataCollections.splice(deleteIndex, 1);
     },
+    // 添加情急，修改baseDataCollections数据
+    ADD_SCENARIO(state,collection){
+        state.scenarioCollections.push(collection)
+        console.log("🚀 ~ ADD_SCENARIO ~ state.scenarioCollections:", state.scenarioCollections)
+    },
+    
 
   };
   
@@ -257,6 +263,24 @@ const state = {
           status: 'Warning'
         }
       ], //数据合集列表
+
+    //情景管理合集
+    scenarioCollections:[
+        {
+            id: 1,
+            name: 'testScenaio111', // 测试情景名称
+            isBaseline: true, // 生产演算开关
+            residentialVacancyRate: 0.21, // 住宅空置率
+            householdGrowthRate: 0.21, // 家庭增长率
+            employmentGrowthRate:0.22, //就业增长率
+            selectedJobControl:null,
+            selectedHControl:null,
+            selectedCollection:'parcel 2020 ',
+            travelModelZone:null,
+            travelModelSkims:null, 
+            travelModelNetwork:null,
+        },
+    ],
 }
 const plugins=[createPersistedState(
     {paths: ['elTreeData','uploadJobControlFileList', 'uploadHouseholdsControlFileList', 'uploadBaseDataFileList']}

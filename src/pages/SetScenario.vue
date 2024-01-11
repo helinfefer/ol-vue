@@ -60,7 +60,7 @@
     <!-- *************************以下是情景创建对话框*************** -->
     <el-form 
       ref="form" 
-      :model="form" 
+      :model="scenarioForm" 
       label-width="150px" 
       class="scenario-form"
     >
@@ -79,16 +79,16 @@
           </el-select>
         </el-form-item> -->
         <el-form-item label="模型名称">
-          <el-input v-model="form.modelName" placeholder="请输入模型名称"></el-input>
+          <el-input v-model="scenarioForm.name" placeholder="请输入模型名称"></el-input>
         </el-form-item>
 
         <el-form-item label="基础情景">
-          <el-switch v-model="form.isBaseline"></el-switch>
+          <el-switch v-model="scenarioForm.isBaseline"></el-switch>
         </el-form-item>
 
         <!-- 基础数据合集的选择  -->
         <el-form-item label="基础数据合集:" >
-          <el-select v-model="form.selectedCollection" placeholder="请选择">
+          <el-select v-model="scenarioForm.selectedCollection" placeholder="请选择">
             <el-option
               v-for="item in baseDataCollections"
               :key="item.id"
@@ -99,14 +99,14 @@
         </el-form-item>
 
         <el-form-item label="住宅空置率">
-          <el-input-number v-model="form.residentialVacancyRate" :min="0" :max="1" :step="0.01"></el-input-number>
+          <el-input-number v-model="scenarioForm.residentialVacancyRate" :min="0" :max="1" :step="0.01"></el-input-number>
         </el-form-item>
         
         <el-form-item label="家庭增长率">
           <hr/>
         </el-form-item>
         <el-form-item label="家庭增长率">
-          <el-input-number v-model="form.householdGrowthRate" :min="0" :max="1" :step="0.01"></el-input-number>
+          <el-input-number v-model="scenarioForm.householdGrowthRate" :min="0" :max="1" :step="0.01"></el-input-number>
         </el-form-item>
     
         <!-- 中间添加 "or" 文本 -->
@@ -125,7 +125,7 @@
             >
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
         </el-upload>
-        <el-select v-model="form.selectedHControl" placeholder="请选择">
+        <el-select v-model="scenarioForm.selectedHControl" placeholder="请选择">
           <el-option
             v-for="item in HControlsOptions"
             :key="item.uid"
@@ -139,7 +139,7 @@
           <hr/>
         </el-form-item>
         <el-form-item label="就业增长率">
-          <el-input-number v-model="form.employmentGrowthRate" :min="0" :max="1" :step="0.01"></el-input-number>
+          <el-input-number v-model="scenarioForm.employmentGrowthRate" :min="0" :max="1" :step="0.01"></el-input-number>
         </el-form-item>
       
         <!-- 中间添加 "or" 文本 -->
@@ -156,7 +156,7 @@
               :file-list="fileList">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
           </el-upload>
-          <el-select v-model="form.selectedJobControl" placeholder="请选择">
+          <el-select v-model="scenarioForm.selectedJobControl" placeholder="请选择">
             <el-option
               v-for="item in jobControlsOptions"
               :key="item.uid"
@@ -171,7 +171,7 @@
       <el-col :span="12">
         <!-- 交通模型分区 -->
         <el-form-item label="交通模型分区">
-          <el-select v-model="form.travelModelZone" placeholder="请选择">
+          <el-select v-model="scenarioForm.travelModelZone" placeholder="请选择">
             <el-option 
               v-for = "item in BaseDataOptions"
               :key="item.value"
@@ -192,7 +192,7 @@
               :file-list="fileList">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
           </el-upload>
-          <el-select v-model="form.travelModelZone" placeholder="请选择">
+          <el-select v-model="scenarioForm.travelModelZone" placeholder="请选择">
             <el-option 
               v-for = "item in BaseDataOptions"
               :key="item.value"
@@ -213,35 +213,36 @@
               :file-list="fileList">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
           </el-upload>
+
         </el-form-item>
 
         <!-- 大文本区域 -->
         <el-form-item label="备注">
-          <el-input type="textarea" v-model="form.notes"></el-input>
+          <el-input type="textarea" v-model="scenarioForm.notes"></el-input>
         </el-form-item>
 
           <!-- 开发标签选择器 -->
           <el-form-item label="Development Tags">
-            <el-select v-model="form.developmentTags" placeholder="请选择">
+            <el-select v-model="scenarioForm.developmentTags" placeholder="请选择">
               <!-- 这里添加选项 -->
             </el-select>
           </el-form-item>
           <!-- 约束标签选择器 -->
           <el-form-item label="Constraint Tags">
-            <el-select v-model="form.constraintTags" placeholder="请选择">
+            <el-select v-model="scenarioForm.constraintTags" placeholder="请选择">
               <!-- 这里添加选项 -->
             </el-select>
           </el-form-item>
           <!-- 调整标签选择器 -->
           <el-form-item label="Adjustments Tags">
-            <el-select v-model="form.adjustmentsTags" placeholder="请选择">
+            <el-select v-model="scenarioForm.adjustmentsTags" placeholder="请选择">
               <!-- 这里添加选项 -->
             </el-select>
           </el-form-item>
           
           <el-form-item>
             <el-button @click="cancel">取消</el-button>
-            <el-button type="primary" @click="save">保存</el-button>
+            <el-button type="primary" @click="saveData">保存</el-button>
           </el-form-item>
       </el-col>
 
@@ -254,7 +255,7 @@
 
     <span slot="footer" class="dialog-footer">
       <el-button @click="dialogCreateSenarioVisible = false">取 消</el-button>
-      <el-button type="primary" @click="dialogCreateSenarioVisible = false">确 定</el-button>
+      <el-button type="primary" @click="saveData" >确 定</el-button>
     </span>
   </el-dialog>
 
@@ -262,18 +263,19 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { mapState } from 'vuex';
+import { v4 as uuidv4 } from 'uuid';
+import { mapState, mapMutations} from 'vuex';
 
 export default {
   name: "SetScenario",
   data() {
     return {
+      id:'',
       isEditMode: true,
       isDetailMode: true,
       isMode: true,
       dialogCreateSenarioVisible:false,
-      form: {
+      scenarioForm: {
         modelName: '', // 模型名称
         isBaseline: true, // 生产演算开关
         residentialVacancyRate: 0.21, // 住宅空置率
@@ -281,6 +283,7 @@ export default {
         employmentGrowthRate:0.22,  //就业增长率
         selectedJobControl:null,
         selectedHControl:null,
+        // 被选择的基础数据集合
         selectedCollection:null,
         // 交通数据
         travelModelZone:null,
@@ -288,15 +291,6 @@ export default {
         travelModelNetwork:null,
 
       },
-      modelNames:[
-        {label: "NOTDM", value: "NOTDM"},
-        {label: "BaseLine", value: "BaseLine"}
-        
-      ],
-      travelModelZones:[
-        {label: "Travel Zones", value: "Travel Zones"},
-        {label: "Travel Parcels", value: "Travel Parcels"}
-      ],
       fileList: [],
     };
   },
@@ -323,19 +317,14 @@ export default {
             console.log('文件上传错误！', err, file);
         },
 
-    save() {
-      console.log(this.form);
-      axios.post('http://localhost:5000/set/setsenario', this.form)
-          .then(response => {
-              // 处理响应
-              this.status = response.data.status; 
-              console.log(this.status);
-          })
-          .catch(error => {
-              // Handle any errors here
-              console.error('Error:', error);
-          });
-        },
+    saveData() {
+      // 保存数据的，创建界面也关闭
+      // 这个情景的uid设置
+      const collection = this.scenarioForm
+      this.$store.commit('ADD_SCENARIO', collection);
+      this.dialogCreateSenarioVisible=false;
+      console.log('scenarioCollection',this.scenarioForm);
+      },
     cancel() {
       // 在这里添加取消表单编辑的逻辑
       console.log('Form reset');
@@ -345,7 +334,8 @@ export default {
 
       
   computed: {
-
+    ...mapState(['baseDataCollections','scenarioCollections']), // 在computed中引入baseDataCollections
+    ...mapMutations(['ADD_SCENARIO']),
     // 从 Vuex 获取并过滤出 job_controls 相关的数据
     jobControlsOptions() {
       // 找到包含 '就业控制总量' 的对象
@@ -379,11 +369,15 @@ export default {
         ? baseData.children
         : [];
     },
-    ...mapState(['baseDataCollections','scenarioCollections']), // 在computed中引入baseDataCollections
+
   },
+
   mounted(){
-    console.log("🚀 ~ mounted ~ baseDataCollections:", this.baseDataCollections)
-  }
+  },
+  created() {
+    this.scenarioForm.id = uuidv4(); // 组件创建时生成一个UUID
+  },
+
 }
 </script>
 
