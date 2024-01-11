@@ -51,9 +51,7 @@ const actions = {
 		})
         miniStore.commit('LOAD_MAP_DATA', layerGroup);
     },
-        
     // 请求数据 
-    
     async fetchDataFromBackend(miniStore,dataset) {
         try {
             const filename = dataset.split('.')[0]
@@ -61,12 +59,12 @@ const actions = {
             //   后端返回
             if(dataset.split('.')[1]==='csv'){
                 const response = await axios.get(`http://localhost:5000/get-data/${filename}`);
-                miniStore.commit('CHANGE_DATA_SHOW_ONTABLE',response.data);
+                miniStore.commit('CHANGE_DATA_SHOW_ONTABLE_CSV',response);
                 
             }
             else if(dataset.split('.')[1]==='geojson'){
                 const response = await axios.get(`http://localhost:5000/get-geo-data/${filename}`);
-                miniStore.commit('CHANGE_DATA_SHOW_ONTABLE',response.data.features);
+                miniStore.commit('CHANGE_DATA_SHOW_ONTABLE',response);
                 miniStore.commit('SET_LAYER_GROUP',response);
             }
             
@@ -75,7 +73,18 @@ const actions = {
           console.error('Failed to fetch data:', error);
         }
       },
-    //   分割数据
+    // 
+    // add_data_collection(miniStore,collection){
+    //     // 添加数据集合
+    //     console.log("🚀 ~ add_data_collection ~ collection:", collection)
+    //     miniStore.commit('ADD_DATA_COLLECTION',collection);  
+    // },
+    // update_data_collection(miniStore,collection){
+    //     // 更新数据集合
+    //     console.log("🚀 ~ add_data_collection ~ collection:", collection)
+    //     miniStore.commit('ADD_DATA_COLLECTION',collection);  
+    // }
+
   };
 
 // 准备 mutations  功能， mutations 用于操作数据
@@ -129,26 +138,52 @@ const mutations = {
         state.elTreeData[2]['children'].push(elTreeBaseDataItem)
 
     },
-
     CHANGE_SELETED_FILE_UID(state, changedFile){
         // 更新当前选择的数据，后面根据这个selectedFileUid 来请求数据库
         state.selectedFileUid = changedFile.uid;
         state.selectedFileName = changedFile.label
     },
     // 修改table组件中的展示数据
-    CHANGE_DATA_SHOW_ONTABLE(state,data){
-        state.dataShowOnTable = data
+    CHANGE_DATA_SHOW_ONTABLE(state,response){
+        state.dataShowOnTable = response.data.features.map(feature => feature.properties)
+        // state.dataShowOnTable = Array.isArray(response.data) ? response.data : [];
+        console.log("🚀 ~ file: index.js:143 ~ CHANGE_DATA_SHOW_ONTABLE ~ dataShowOnTable:", state.dataShowOnTable)
+
     },
+    CHANGE_DATA_SHOW_ONTABLE_CSV(state,response){
+        state.dataShowOnTable = response.data
+        // state.dataShowOnTable = Array.isArray(response.data) ? response.data : [];
+        // console.log("🚀 ~ file: index.js:143 ~ CHANGE_DATA_SHOW_ONTABLE ~ dataShowOnTable:", state.dataShowOnTable)
+    },
+
     HANDLE_CURRENT_CHANGE(state,newPage){
         state.currentPage = newPage
     },
-
     HANDLE_SIZE_CHANGE(state,newSize){
         state.pageSize = newSize;
         state.currentPage = 1; // 重置到第一页
     },
+
+    // 添加数据集合，修改baseDataCollections数据
+    ADD_DATA_COLLECTION(state,collection){
+        state.baseDataCollections.push(collection)
+    },
+    UPDATE_DATA_COLLECTION(state,collection){
+        // 更新
+        const updatedIndex = state.baseDataCollections.findIndex(item => item.id === collection.id);
+        console.log("🚀 ~ UPDATE_DATA_COLLECTION ~ updatedIndex:", updatedIndex)
+        if (updatedIndex !== -1) {
+            state.baseDataCollections.splice(updatedIndex, 1, collection);
+        }
+    },
+    DELETE_DATA_COLLECTION(state,collectionId){
+        // 删除数据合集
+        const deleteIndex = state.baseDataCollections.findIndex(item => item.id === collectionId);
+        console.log("🚀 ~ DELETE_DATA_COLLECTION ~ deleteIndex:", deleteIndex)
+        state.baseDataCollections.splice(deleteIndex, 1);
+    },
+
   };
-  
   
 const getters = {
     // 获取分页后的表格数据
@@ -204,7 +239,24 @@ const state = {
     mapCenter: [114.1692, 30.494],
     mapZoom: 10,
     layerGroup: null, // 初始状态为null
-    // 其他状态...
+    baseDataCollections:[
+        {
+          id: 1,
+          name: 'Parcel initialization',
+          year: '2017',
+          template: 'Parcel model initialization',
+          notes: '',
+          status: 'Ok'
+        },
+        {
+          id: 2,
+          name: 'Region Base Data v1',
+          year: '2014',
+          template: 'Parcel base data',
+          notes: 'Warning: 24695 buildings have non-residential use',
+          status: 'Warning'
+        }
+      ], //数据合集列表
 }
 const plugins=[createPersistedState(
     {paths: ['elTreeData','uploadJobControlFileList', 'uploadHouseholdsControlFileList', 'uploadBaseDataFileList']}

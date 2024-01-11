@@ -197,7 +197,8 @@
   
   <script>
   import { v4 as uuidv4 } from 'uuid';
-  
+  import { mapState, mapMutations} from 'vuex';
+
   export default {
     data() {
       return {
@@ -225,24 +226,24 @@
         dataCollectionDialogVisible: false,
         dataSelectionDialogVisible:false,
         // baseDataCollections  是数据集合存储集合，最终的表单数据也提交到这里
-        baseDataCollections: [
-          {
-            id: 1,
-            name: 'Parcel initialization',
-            year: '2017',
-            template: 'Parcel model initialization',
-            notes: '',
-            status: 'Ok'
-          },
-          {
-            id: 2,
-            name: 'Region Base Data v1',
-            year: '2014',
-            template: 'Parcel base data',
-            notes: 'Warning: 24695 buildings have non-residential use',
-            status: 'Warning'
-          }
-        ],
+        // baseDataCollections: [
+        //   {
+        //     id: 1,
+        //     name: 'Parcel initialization',
+        //     year: '2017',
+        //     template: 'Parcel model initialization',
+        //     notes: '',
+        //     status: 'Ok'
+        //   },
+        //   {
+        //     id: 2,
+        //     name: 'Region Base Data v1',
+        //     year: '2014',
+        //     template: 'Parcel base data',
+        //     notes: 'Warning: 24695 buildings have non-residential use',
+        //     status: 'Warning'
+        //   }
+        // ],
         checkedNodes:{},
         // 正在修改的情景数据：
         editingData:null,
@@ -297,16 +298,20 @@
             notes: this.DatailForm.notes,
             selectdDataForm: { ...this.selectdDataForm },
           };
-
+          
           if (this.isEditMode) {
-            const updatedIndex = this.baseDataCollections.findIndex(item => item.id === this.DatailForm.id);
-            if (updatedIndex !== -1) {
-              this.baseDataCollections.splice(updatedIndex, 1, baseDataCollection);
-            }
+            // const updatedIndex = this.baseDataCollections.findIndex(item => item.id === baseDataCollection.id);
+            // if (updatedIndex !== -1) {
+            //   this.baseDataCollections.splice(updatedIndex, 1, baseDataCollection);
+            // }
+            this.UPDATE_DATA_COLLECTION(baseDataCollection);
             this.isEditMode = false; // 重置编辑模式
           } else {
+            // 添加
             this.baseDataCollections.push(baseDataCollection);
+            // this.ADD_DATA_COLLECTION(baseDataCollection) 
           }
+            console.log("🚀 ~ completeDataSelection ~ this.isEditMode:", this.isEditMode)
             this.dataSelectionDialogVisible = false;
             this.dataCollectionDialogVisible = false; // 关闭数据选择对话框
             this.activeStep = 0; // 重置步骤指示器到第一步
@@ -359,7 +364,9 @@
             type: 'warning'
           }).then(() => {
             // 用户确认删除后的操作
-            this.baseDataCollections.splice(index, 1); // 删除选定的项
+
+            // this.baseDataCollections.splice(index, 1); // 删除选定的项
+            this.DELETE_DATA_COLLECTION(index)
             // 如果需要，这里可以添加一个 API 调用来从服务器删除数据
             this.$message({
               type: 'success',
@@ -373,7 +380,8 @@
             });
           });
         },
-
+        // ...mapActions(['add_data_collection','update_data_collection','delete_data_collection']),
+        ...mapMutations(['ADD_DATA_COLLECTION','UPDATE_DATA_COLLECTION','DELETE_DATA_COLLECTION']), //添加集合、更新集合、删除集合
     },
 
     computed: {
@@ -388,6 +396,9 @@
           ? baseData.children
           : [];
       },
+      ...mapState(['baseDataCollections']),  //在组件中使用baseDataCollections 
+
+
     }
   };
 
