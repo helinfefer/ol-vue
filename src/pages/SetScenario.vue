@@ -3,17 +3,17 @@
   <div class="scenario-container">
     <br>
   <!-- <h3>创建一个情景</h3> -->
+  
   <el-form 
     ref="form" 
     :model="form" 
     label-width="150px" 
     class="scenario-form"
-    
   >
   <el-row >
 
     <el-col :span="12">
-      <el-form-item label="模型名称">
+      <!-- <el-form-item label="模型名称">
         <el-select v-model="form.modelName" placeholder="请选择">
           <el-option 
             v-for = "item in modelNames"
@@ -22,14 +22,28 @@
             :value="item.value"
           >
           </el-option>
-          <!-- 这里可以继续添加更多的选项 -->
         </el-select>
+      </el-form-item> -->
+      <el-form-item label="模型名称">
+        <el-input v-model="form.modelName" placeholder="请输入模型名称"></el-input>
       </el-form-item>
-  
+
       <el-form-item label="基础情景">
         <el-switch v-model="form.productionCalculation"></el-switch>
       </el-form-item>
-  
+
+      <!-- 基础数据合集的选择  -->
+      <el-form-item label="基础数据合集:" >
+        <el-select v-model="form.selectedCollection" placeholder="请选择">
+          <el-option
+            v-for="item in baseDataCollections"
+            :key="item.id"
+            :label="item.label"
+            :value="item.name"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="住宅空置率">
         <el-input-number v-model="form.residentialVacancyRate" :min="0" :max="1" :step="0.01"></el-input-number>
       </el-form-item>
@@ -57,6 +71,14 @@
           >
           <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
       </el-upload>
+      <el-select v-model="form.selectedHControl" placeholder="请选择">
+        <el-option
+          v-for="item in HControlsOptions"
+          :key="item.uid"
+          :label="item.label"
+          :value="item.uid"
+        ></el-option>
+      </el-select>
     </el-form-item>
     
       <el-form-item label="就业增长率">
@@ -80,6 +102,14 @@
             :file-list="fileList">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
         </el-upload>
+        <el-select v-model="form.selectedJobControl" placeholder="请选择">
+          <el-option
+            v-for="item in jobControlsOptions"
+            :key="item.uid"
+            :label="item.label"
+            :value="item.uid"
+          ></el-option>
+        </el-select>
       </el-form-item>
     </el-col>
     <!-- 操作按钮 -->
@@ -162,6 +192,8 @@
 
 <script>
 import axios from 'axios';
+import { mapState } from 'vuex';
+
 export default {
   name: "SetScenario",
   data() {
@@ -171,6 +203,9 @@ export default {
         productionCalculation: true, // 生产演算开关
         residentialVacancyRate: 0.21, // 住宅空置率
         householdGrowthRate: 0.21, // 家庭增长率
+        selectedJobControl:null,
+        selectedHControl:null,
+        selectedCollection:null,
         // 其他表单项的数据模型...
       },
       modelNames:[
@@ -211,6 +246,33 @@ export default {
       console.log('Form reset');
       this.$refs.form.resetFields();
     }
+  },
+  computed: {
+    // 从 Vuex 获取并过滤出 job_controls 相关的数据
+    jobControlsOptions() {
+      // 找到包含 '就业控制总量' 的对象
+      const jobControlsData = this.$store.state.elTreeData.find(
+        data => data.label === '就业控制总量'
+      );
+      // 确保找到该对象并且该对象有 children 属性
+      return jobControlsData && jobControlsData.children
+        ? jobControlsData.children
+        : [];
+    },
+    HControlsOptions() {
+      // 找到包含 '就业控制总量' 的对象
+      const HControlsData = this.$store.state.elTreeData.find(
+        data => data.label === '家庭控制总量'
+      );
+      // 确保找到该对象并且该对象有 children 属性
+      return HControlsData && HControlsData.children
+        ? HControlsData.children
+        : [];
+    },
+    ...mapState(['baseDataCollections']), // 在computed中引入baseDataCollections
+  },
+  mounted(){
+    console.log("🚀 ~ mounted ~ baseDataCollections:", this.baseDataCollections)
   }
 }
 </script>
