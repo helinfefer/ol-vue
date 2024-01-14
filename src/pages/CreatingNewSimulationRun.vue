@@ -1,8 +1,10 @@
 <template>
   <div>
-  <el-button @click="dialogVisible = true">Create Run</el-button>
+  <el-button @click="createRunDialogVisible = true">创建模拟运行</el-button>
+
+  <!-- 创建模拟运行的dialog -->
   <el-dialog
-    :visible.sync="dialogVisible"
+    :visible.sync="createRunDialogVisible"
     width="80%"
     >
   <el-form>
@@ -62,24 +64,41 @@
           <footer>
           <span slot="footer">
           <el-button type="danger"  class="mybb1"  size="medium">Cancel</el-button>
-          <el-button type="success"  class="mybb2" size="medium" @click="showFormData" >Start Run</el-button>
+          <el-button type="success"  class="mybb2" size="medium" @click="startRun" >开始运行</el-button>
           </span>
           </footer>
         </el-form-item>
     </el-form>
   
-    </el-dialog>
+  </el-dialog>
+  <el-dialog title="运行界面" :visible.sync="runDialogVisible">
+    <div class="status-bar">
+      <div>运行状态: <span>{{ runStatus }}</span></div>
+      <el-progress :percentage="progress"></el-progress>
+    </div>
+
+    <div class="console-output">
+      <pre>{{ consoleOutput }}</pre>
+    </div>
+
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="runDialogVisible = false">Close</el-button>
+      <el-button type="primary" @click="deleteRun">Delete Run</el-button>
+    </div>
+  </el-dialog>
+
   </div>
   </template>
   
   <script>
   import { mapState} from 'vuex';
-
+  import axios from 'axios';
   export default {
     name: 'CreateRun',
     data() {
       return {
-        dialogVisible: false, 
+        createRunDialogVisible: false, 
+        runDialogVisible:false, 
         runFormData:{
           selectedScenario:[], //选择的情景
           end_year: 2010,
@@ -96,16 +115,73 @@
           //   {label:"University Expansion",name:"checked"},
           //   {label:"Upzone",name:"checked"},
           // ],
-        }
+        },
+        consoleOutput:'',
+        runStatus: '正在运行中',  //模型运行的状态 （）
+        progress: 0, // 初始进度为 0
+
       };
     },
     methods: {
       handleChange(value) {
         console.log(value);
       },
-      showFormData(){
-        console.log("🚀 ~ showFormData ~ this.runFormData:", this.runFormData)
-      }
+      startRun(){
+        console.log("🚀 ~ startRun ~ this.runFormData:", this.runFormData.selectedScenario[0])
+        // 开始运行，打开运行界面，并关闭创建界面
+        this.createRunDialogVisible=false;
+        this.runDialogVisible=true;
+        // 发送数据到后端并进行运行
+        //  构建传递到后端的参数
+        // 1. 情景参数
+        const selectedScenario = this.scenarioCollections.find(
+        data => data.name === this.runFormData.selectedScenario[0]
+        );
+        // 2. 数据集
+        console.log("🚀 ~ startRun ~ this.baseDataCollections:", this.baseDataCollections)
+        const selectedCollection = this.baseDataCollections.find(
+        data => data.name === selectedScenario['selectedCollection'] 
+        );
+        console.log("🚀 ~ startRun ~ selectedCollection:", selectedScenario['selectedCollection'] )
+
+        // 3. 构建数据
+        const simulationParameters = {
+          end_year:this.runFormData.end_year,
+          rancalibrated_coefficients:this.runFormData.rancalibrated_coefficients,
+          random_seed:this.runFormData.random_seed,
+          selectedScenario:selectedScenario,
+          selectedCollection:selectedCollection
+        };
+        console.log("🚀 ~ startRun ~ simulationParameters:", simulationParameters)
+        this.startProcess();
+      },
+      // 删除模拟
+      deleteRun(){
+        console.log("🚀 ~ deleteRun ~ this.runFormData:", this.runFormData)
+      },
+      updateProgress() {
+      // 假设 '/progress' 路径返回当前进度
+      axios.get('http://localhost:5000/progress')
+        .then(response => {
+          // 假设响应的格式为 { progress: 30 }
+          this.progress = response.data.progress;
+          this.consoleOutput = response.data.console_output;
+          if (this.progress < 100) {
+            // 如果进度未完成，继续轮询
+            setTimeout(this.updateProgress, 1000);
+          } else {
+            // 进度完成
+            this.runStatus = '运行完成';
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching progress:', error);
+        });
+    },
+    startProcess() {
+      // 开始处理或者轮询
+      this.updateProgress();
+    }
     },
     components: {
     },
@@ -120,11 +196,12 @@
     mounted:{
       showFormData(){
         console.log(this.runFormData),
-        this.dialogVisible=false
+        this.createRunDialogVisible=false
       },
+      
       closedialog(){
-        this.dialogVisible=false
-      }
+        this.createRunDialogVisible=false
+      },
     },
   }
   </script>
@@ -172,6 +249,25 @@
     bottom: 1; 
     right: 150px;
      } ; 
-  
-  
+  .console-output {
+  background: #000; /* 设置为黑色背景 */
+  color: #00ff00; /* 终端常用的绿色字体 */
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  font-family: 'Courier New', Courier, monospace; /* 使用等宽字体 */
+  overflow: auto; /* 如果内容过多，允许滚动 */
+  max-height: 300px; /* 设置最大高度 */
+}
+
+/* Element UI 进度条自定义样式 */
+.el-progress-bar__outer {
+  height: 18px; /* 进度条的高度 */
+}
+
+.dialog-footer {
+  text-align: right;
+}
+
   </style>

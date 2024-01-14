@@ -8,6 +8,8 @@
         <el-button type="primary" @click="orcaBack">清除缓存</el-button>
         <br>
         <span>{{ msg }}</span>
+        <pre>{{ consoleOutput }}</pre>
+
         <TableComponent v-if="plotData" :dataFromParent="plotData"/>
         <!-- <span>{{householdsTable}}</span> -->
 
@@ -43,6 +45,7 @@ import axios from 'axios';
         msg:null,
         plotData:null,
         geojsonData:{},
+        consoleOutput:null, //终端输出
       }
     },
     methods: {
@@ -61,6 +64,9 @@ import axios from 'axios';
               this.geojsonData =response.data.geojson_plot_data;
               
               this.plotData = this.householdsTable
+              // 终端输出
+              this.consoleOutput = response.data.console_output;  // 设置控制台输出到数据属性
+              console.log("🚀 ~ runHTransition ~ this.consoleOutput :", this.consoleOutput )
               console.log("*****this.geojsonData********",this.geojsonData['50']);
             }) //response 是服务器的响应
             .catch(error => {

@@ -252,7 +252,16 @@ const state = {
           year: '2017',
           template: 'Parcel model initialization',
           notes: '',
-          status: 'Ok'
+          status: 'Ok',
+          selectdDataForm:{
+            selectedParcels:'parcels.geojson',
+            selectedBuildings:'buildings.geojson',
+            selectedHouseholds:'households.csv',
+            selectedJobs:'',
+            selectedRent:'',
+            selectedPrice:'',
+          },
+
         },
         {
           id: 2,
@@ -260,7 +269,15 @@ const state = {
           year: '2014',
           template: 'Parcel base data',
           notes: 'Warning: 24695 buildings have non-residential use',
-          status: 'Warning'
+          status: 'Warning',
+          selectdDataForm:{
+            selectedParcels:'parcels.geojson',
+            selectedBuildings:'buildings.geojson',
+            selectedHouseholds:'households.csv',
+            selectedJobs:'',
+            selectedRent:'',
+            selectedPrice:'',
+          },
         }
       ], //数据合集列表
 
@@ -275,7 +292,7 @@ const state = {
             employmentGrowthRate:0.22, //就业增长率
             selectedJobControl:null,
             selectedHControl:null,
-            selectedCollection:'parcel 2020 ',
+            selectedCollection:'Region Base Data v1',
             travelModelZone:null,
             travelModelSkims:null, 
             travelModelNetwork:null,
@@ -289,7 +306,7 @@ const state = {
             employmentGrowthRate:0.20, //就业增长率
             selectedJobControl:null,
             selectedHControl:null,
-            selectedCollection:'parcel 2015 ',
+            selectedCollection:'parcel 2020',
             travelModelZone:null,
             travelModelSkims:null, 
             travelModelNetwork:null,
