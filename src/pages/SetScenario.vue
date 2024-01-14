@@ -7,7 +7,7 @@
   <el-table :data=" scenarioCollections" stripe style="width: 100%">
     <el-table-column prop="id" label="ID" width="50"></el-table-column>
     <el-table-column prop="name" label="情景名称"></el-table-column>
-    <el-table-column prop="year" label="Year" ></el-table-column>
+    <!-- <el-table-column prop="year" label="Year" ></el-table-column> -->
     <el-table-column  label="居住空置率">
       <template slot-scope="scope">
         <div>居住空置率: {{ scope.row.residentialVacancyRate }}</div>
@@ -53,7 +53,7 @@
   </el-table>
 
   <el-dialog
-    :title="isDetailMode ? 'View Data Collection Details' : (isEditMode ? 'Edit Data Collection' : 'Create new data collection')"
+    :title="isDetailMode ? '查看情景信息' : (isEditMode ? '修改情景' : '创建一个新场景')"
     :visible.sync="dialogCreateSenarioVisible"
     width="80%"
     :before-close="handleClose">
@@ -271,8 +271,8 @@ export default {
   data() {
     return {
       id:'',
-      isEditMode: true,
-      isDetailMode: true,
+      isEditMode: false,
+      isDetailMode: false,
       isMode: true,
       dialogCreateSenarioVisible:false,
       scenarioForm: {

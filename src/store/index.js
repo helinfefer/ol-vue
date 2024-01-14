@@ -280,6 +280,20 @@ const state = {
             travelModelSkims:null, 
             travelModelNetwork:null,
         },
+        {
+            id: 2,
+            name: 'testScenaio222', // 测试情景名称
+            isBaseline: false, // 生产演算开关
+            residentialVacancyRate: 0.25, // 住宅空置率
+            householdGrowthRate: 0.19, // 家庭增长率
+            employmentGrowthRate:0.20, //就业增长率
+            selectedJobControl:null,
+            selectedHControl:null,
+            selectedCollection:'parcel 2015 ',
+            travelModelZone:null,
+            travelModelSkims:null, 
+            travelModelNetwork:null,
+        },
     ],
 }
 const plugins=[createPersistedState(

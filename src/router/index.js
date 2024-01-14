@@ -20,6 +20,7 @@ import SetScenario from '../pages/SetScenario.vue'
 import UploadData from '../pages/UploadData.vue'
 import ConstrainsPage from '../pages/ConstrainsPage.vue';
 import DataBaseCollections from '../pages/DataBaseCollections.vue';
+import CreatingNewSimulationRun from '../pages/CreatingNewSimulationRun.vue';
 export default new VueRouter({
     routes: [
         {
@@ -94,7 +95,10 @@ export default new VueRouter({
                     path:'upload',
                     component:UploadData
                 },
-
+                {
+                    path:'createrun',
+                    component:CreatingNewSimulationRun
+                },
 
             ]
         },

@@ -8,6 +8,7 @@
 			<el-button @click="goToCollectionPage">Base Data Collections</el-button>
 			<el-button @click="goToInputPage">开发项目</el-button>
 			<el-button @click="goToRunPage">运行RUN</el-button>
+			<el-button @click="goToSetScenario">SetScenario</el-button>
 		</el-header>
 		<el-main><router-view ></router-view></el-main>
 		<el-footer>Footer</el-footer>
@@ -44,6 +45,12 @@ export default {
 			this.$router.push('/ums/createrun');
 			}
 		},
+		goToSetScenario() {
+			if (this.$route.path !== '/ums/setscenario') {
+			this.$router.push('/ums/setscenario');
+			}
+		},
+
 
 
 	}
