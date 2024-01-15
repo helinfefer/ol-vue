@@ -130,7 +130,7 @@
             v-for="item in HControlsOptions"
             :key="item.uid"
             :label="item.label"
-            :value="item.uid"
+            :value="item.label"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -161,7 +161,7 @@
               v-for="item in jobControlsOptions"
               :key="item.uid"
               :label="item.label"
-              :value="item.uid"
+              :value="item.label"
             ></el-option>
           </el-select>
         </el-form-item>
