@@ -71,14 +71,14 @@
     </el-form>
   
   </el-dialog>
-  <el-dialog title="运行界面" :visible.sync="runDialogVisible">
+  <el-dialog title="运行界面" :visible.sync="runDialogVisible" width="80%">
     <div class="status-bar">
       <div>运行状态: <span>{{ runStatus }}</span></div>
       <el-progress :percentage="progress"></el-progress>
     </div>
-
-    <div class="console-output">
-      <pre>{{ consoleOutput }}</pre>
+    
+    <div class="console-output-f">
+      <pre class="console-output">{{ consoleOutput }}</pre>
     </div>
 
     <div slot="footer" class="dialog-footer">
@@ -149,38 +149,39 @@
           end_year:this.runFormData.end_year,
           rancalibrated_coefficients:this.runFormData.rancalibrated_coefficients,
           random_seed:this.runFormData.random_seed,
-          selectedScenario:selectedScenario,
-          selectedCollection:selectedCollection
+          selectedScenario:JSON.stringify(selectedScenario),
+          selectedCollection:JSON.stringify(selectedCollection), //需要确保 selectedScenario 和 selectedCollection 对象能够被正确地序列化成一个可通过 URL 传输的格式。一般来说，将对象转换为 JSON 字符串是处理这类问题的标准做法。
         };
+        const queryParams = new URLSearchParams(simulationParameters).toString();
         console.log("🚀 ~ startRun ~ simulationParameters:", simulationParameters)
-        this.startProcess();
+        this.startProcess(queryParams); // start the simulation
       },
       // 删除模拟
       deleteRun(){
         console.log("🚀 ~ deleteRun ~ this.runFormData:", this.runFormData)
       },
-      updateProgress() {
-      // 假设 '/progress' 路径返回当前进度
-      axios.get('http://localhost:5000/progress')
-        .then(response => {
-          // 假设响应的格式为 { progress: 30 }
-          this.progress = response.data.progress;
-          this.consoleOutput = response.data.console_output;
-          if (this.progress < 100) {
-            // 如果进度未完成，继续轮询
-            setTimeout(this.updateProgress, 1000);
-          } else {
-            // 进度完成
-            this.runStatus = '运行完成';
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching progress:', error);
-        });
+      updateProgress(queryParams) {
+        console.log("🚀 ~ updateProgress ~ queryParams:", queryParams)
+        // 假设 '/progress' 路径返回当前进度
+        axios.get(`http://localhost:5000/progress?${queryParams}`).then(response => {
+            // 假设响应的格式为 { progress: 30 }
+            this.progress = response.data.progress; 
+            this.consoleOutput = response.data.console_output;
+            if (this.progress < 100) {
+              // 如果进度未完成，继续轮询
+              setTimeout(() => this.updateProgress(queryParams), 1000);
+            } else {
+              // 进度完成
+              this.runStatus = '运行完成';
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching progress:', error);
+          });
     },
-    startProcess() {
+    startProcess(queryParams) {
       // 开始处理或者轮询
-      this.updateProgress();
+      this.updateProgress(queryParams);
     }
     },
     components: {
@@ -206,7 +207,7 @@
   }
   </script>
   
-  <style scoped>
+<style scoped>
   /* h1间距调整 */
   .h1{
     margin-left: 30px;
@@ -217,11 +218,6 @@
     margin-bottom: 20px;
     margin-left:50px}
   
-  /* h2间距调整 */
-  .h2-1{
-    margin-left: 30px;
-  }
-  
   /* notes框大小设置 */
   .notes{
     width: 450px; 
@@ -230,35 +226,30 @@
   
   /* 勾选框竖直排列 */
   .checkbox{
-  
     display: block; /* 将 label 设置为块级元素 */
     margin-bottom: 10px; /* 设置下边距，可根据需要调整 */
   }
-  
   /* footer按钮位置调节 */
   footer {
     position: relative;
   }
-  .mybb2{ 
-      position: absolute; 
-      bottom: 1; 
-      right: 20px; 
-   }   
-  .mybb1{
-    position: absolute;
-    bottom: 1; 
-    right: 150px;
-     } ; 
-  .console-output {
+
+  .console-output-f {
+    overflow-x: hidden !important; 
+    overflow-y:auto !important;
+    height: 500px;
+    position: relative;
+
+  }
+  .console-output { 
+  height: 500px;
   background: #000; /* 设置为黑色背景 */
-  color: #00ff00; /* 终端常用的绿色字体 */
+  color: #eeeeee; /* 终端常用的绿色字体 */
   padding: 15px;
   margin-top: 20px;
   border-radius: 4px;
   white-space: pre-wrap;
   font-family: 'Courier New', Courier, monospace; /* 使用等宽字体 */
-  overflow: auto; /* 如果内容过多，允许滚动 */
-  max-height: 300px; /* 设置最大高度 */
 }
 
 /* Element UI 进度条自定义样式 */
@@ -270,4 +261,4 @@
   text-align: right;
 }
 
-  </style>
+</style>
