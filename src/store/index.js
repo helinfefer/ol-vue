@@ -313,8 +313,12 @@ const state = {
         },
     ],
 }
+
+// 浏览器存储
 const plugins=[createPersistedState(
-    {paths: ['elTreeData','uploadJobControlFileList', 'uploadHouseholdsControlFileList', 'uploadBaseDataFileList']}
+    {
+        paths: ['elTreeData','uploadJobControlFileList', 'uploadHouseholdsControlFileList', 'uploadBaseDataFileList','baseDataCollections','scenarioCollections']
+    }
 )]
 
 

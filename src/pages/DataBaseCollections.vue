@@ -308,8 +308,8 @@
             this.isEditMode = false; // 重置编辑模式
           } else {
             // 添加
-            this.baseDataCollections.push(baseDataCollection);
-            // this.ADD_DATA_COLLECTION(baseDataCollection) 
+            // this.baseDataCollections.push(baseDataCollection);
+            this.ADD_DATA_COLLECTION(baseDataCollection) 
           }
             console.log("🚀 ~ completeDataSelection ~ this.isEditMode:", this.isEditMode)
             this.dataSelectionDialogVisible = false;
