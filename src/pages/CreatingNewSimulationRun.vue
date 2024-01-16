@@ -101,7 +101,7 @@
         runDialogVisible:false, 
         runFormData:{
           selectedScenario:[], //选择的情景
-          end_year: 2010,
+          end_year: 2035,
           random_seed:0,
           rancalibrated_coefficients:true, //校正系数
           // checkList:["All scenarios","Anoka Expressway","Baseline_skims","Satellite Campus Cluster",
@@ -161,10 +161,11 @@
         console.log("🚀 ~ deleteRun ~ this.runFormData:", this.runFormData)
       },
       updateProgress(queryParams) {
-        console.log("🚀 ~ updateProgress ~ queryParams:", queryParams)
+        // console.log("🚀 ~ updateProgress ~ queryParams:", queryParams)
         // 假设 '/progress' 路径返回当前进度
         axios.get(`http://localhost:5000/progress?${queryParams}`).then(response => {
             // 假设响应的格式为 { progress: 30 }
+            // 处理响应
             this.progress = response.data.progress; 
             this.consoleOutput = response.data.console_output;
             if (this.progress < 100) {
@@ -202,6 +203,7 @@
       
       closedialog(){
         this.createRunDialogVisible=false
+        this.consoleOutput = 'xxx'
       },
     },
   }
