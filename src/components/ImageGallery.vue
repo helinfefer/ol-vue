@@ -1,43 +1,104 @@
 <template>
-    <div class="image-gallery">
-      <div v-for="(url, index) in imageUrls" :key="index" class="image-container">
-        <img :src="url" alt="图片描述" class="gallery-image">
-      </div>
+    <div>
+        <br>
+        <el-button type="primary" icon="el-icon-refresh" @click="refreshImages">刷新图片</el-button>
+
+        <div class="image-gallery">
+            <div v-for="(url, index) in imageUrls" :key="index" class="image-container">
+                <el-image :src="url" fit="cover" ></el-image>
+                
+                <!-- 下载按钮 -->
+                <el-button type="text" icon="el-icon-download" @click="downloadImage(url)">下载</el-button>
+            </div>
+            <iframe
+                src="http://localhost:5000/runs/map_runs.html"
+                width=80%
+                height="500"
+                style="border:none;">
+            </iframe>
+        </div>
+
     </div>
   </template>
   
   <script>
+//   import { mapState } from 'vuex';
+//   import {L} from 'leaflet';
   export default {
     name: 'ImageGallery',
+    data(){
+        return {
+            // runMapData:``,
+            htmlData: `<!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Sample HTML Data</title>
+                </head>
+                <body>
+                    <h2>Hello, this is HTML data from Vue!</h2>
+                    <p>This is a simple example.</p>
+                </body>
+                </html>`,
+        }
+    },
     computed: {
       imageUrls() {
         return this.$store.state.imageUrls;
-      }
+      },
+    //   ...mapState(['runMapData']), // 将mapData状态映射到组件的计算属性中
     },
-    created() { //从后端动态获取
-      this.$store.dispatch('fetchImageUrls');
-    }
+    methods: {
+        async refreshImages() {
+            await this.$store.dispatch('fetchImageUrls');
+            // await this.$store.dispatch('fetchMapData');
+            },
+        // refreshImages() {
+        // this.$store.dispatch('fetchImageUrls');
+        // this.$store.dispatch('fetchMapData');
+        // this.htmlData = `${this.runMapData}`;
+        // console.log("🚀 ~ refreshImages ~ this.runMapData:", this.htmlData)
+        // },
+        async downloadImage(url) {
+            try {
+                const response = await fetch(url, {
+                headers: {
+                    'Content-Type': 'image/jpeg', // 根据实际图片类型调整
+                },
+                mode: 'cors', // 如果图片支持跨域请求
+                });
+
+                if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+
+                const blob = await response.blob();
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = url.split('/').pop(); // 提取文件名
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(downloadUrl); // 清理资源
+            } catch (error) {
+                console.error('下载图片时出错:', error);
+            }
+        },
+    },
+    created() {
+      this.refreshImages();
+    },
   };
   </script>
   
-  <style>
-  .image-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* 自动调整列数和列宽 */
-    gap: 15px; /* 设置网格间距 */
-    padding: 10px; /* 为整个画廊添加一些内边距 */
+<style>
+.image-gallery {
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+}
+.folium-map {
+    height: 500px; /* 或其他具体的高度 */
+    width: 100%; /* 可以是固定宽度或百分比 */
   }
-  
-  .image-container {
-    border: 1px solid #ddd; /* 添加边框 */
-    border-radius: 5px; /* 圆角边框 */
-    overflow: hidden; /* 使图片在容器中剪裁 */
-  }
-  
-  .gallery-image {
-    width: 100%; /* 让图片填充整个容器 */
-    height: auto;
-    display: block; /* 防止图片下方出现空隙 */
-  }
-  </style>
+
+</style>
   
