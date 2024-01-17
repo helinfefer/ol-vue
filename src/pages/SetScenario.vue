@@ -329,13 +329,37 @@ export default {
       // 在这里添加取消表单编辑的逻辑
       console.log('Form reset');
       this.$refs.form.resetFields();
-    }
+    },
+    handleDelete(index) {
+          this.$confirm('您确定要删除这个数据合集吗?', 'Warning', {
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+            type: 'warning'
+          }).then(() => {
+            // 用户确认删除后的操作
+
+            // this.baseDataCollections.splice(index, 1); // 删除选定的项
+            this.DELETE_SCENARIO(index)
+            // 如果需要，这里可以添加一个 API 调用来从服务器删除数据
+            this.$message({
+              type: 'success',
+              message: 'Delete completed'
+            });
+          }).catch(() => {
+            // 用户取消删除操作
+            this.$message({
+              type: 'info',
+              message: 'Delete canceled'
+            });
+          });
+        },
+
   },
 
       
   computed: {
     ...mapState(['baseDataCollections','scenarioCollections']), // 在computed中引入baseDataCollections
-    ...mapMutations(['ADD_SCENARIO']),
+    ...mapMutations(['ADD_SCENARIO','DELETE_SCENARIO']),
     // 从 Vuex 获取并过滤出 job_controls 相关的数据
     jobControlsOptions() {
       // 找到包含 '就业控制总量' 的对象
