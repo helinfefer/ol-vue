@@ -1,6 +1,7 @@
 <template>
   <div>
-  <el-button @click="createRunDialogVisible = true">创建模拟运行</el-button>
+    <el-button @click="createRunDialogVisible = true">创建模拟运行</el-button>
+    <ImageGallery></ImageGallery>
 
   <!-- 创建模拟运行的dialog -->
   <el-dialog
@@ -82,7 +83,7 @@
     </div>
 
     <div slot="footer" class="dialog-footer">
-      <el-button @click="runDialogVisible = false">Close</el-button>
+      <el-button @click="HandleClose">Close</el-button>
       <el-button type="primary" @click="deleteRun">Delete Run</el-button>
     </div>
   </el-dialog>
@@ -91,6 +92,7 @@
   </template>
   
   <script>
+  import ImageGallery from '../components/ImageGallery.vue'
   import { mapState} from 'vuex';
   import axios from 'axios';
   export default {
@@ -104,17 +106,6 @@
           end_year: 2035,
           random_seed:0,
           rancalibrated_coefficients:true, //校正系数
-          // checkList:["All scenarios","Anoka Expressway","Baseline_skims","Satellite Campus Cluster",
-          // "Transit expansion","University Expansion","Upzone"],
-          // checkList:[
-          //   {label:"All scenarios",name:"checked"},
-          //   {label:"Anoka Expressway",name:"checked"},
-          //   {label:"Baseline_skims",name:"checked"},
-          //   {label:"Satellite Campus Cluster",name:"checked"},
-          //   {label:"Transit expansion",name:"checked"},
-          //   {label:"University Expansion",name:"checked"},
-          //   {label:"Upzone",name:"checked"},
-          // ],
         },
         consoleOutput:'',
         runStatus: '正在运行中',  //模型运行的状态 （）
@@ -122,6 +113,7 @@
 
       };
     },
+    components:{ImageGallery},
     methods: {
       handleChange(value) {
         console.log(value);
@@ -131,6 +123,7 @@
         // 开始运行，打开运行界面，并关闭创建界面
         this.createRunDialogVisible=false;
         this.runDialogVisible=true;
+        this.progress = 0; // 初始进度为 0
         // 发送数据到后端并进行运行
         //  构建传递到后端的参数
         // 1. 情景参数
@@ -161,14 +154,16 @@
         console.log("🚀 ~ deleteRun ~ this.runFormData:", this.runFormData)
       },
       updateProgress(queryParams) {
-        // console.log("🚀 ~ updateProgress ~ queryParams:", queryParams)
+        console.log("🚀 ~ updateProgress ~ queryParams:", queryParams)
         // 假设 '/progress' 路径返回当前进度
         axios.get(`http://localhost:5000/progress?${queryParams}`).then(response => {
             // 假设响应的格式为 { progress: 30 }
             // 处理响应
             this.progress = response.data.progress; 
+            console.log("🚀 ~ axios.get ~ this.progress:", this.progress)
             this.consoleOutput = response.data.console_output;
             if (this.progress < 100) {
+              console.log("🚀 ~ axios.get ~ this.progress:", this.progress)
               // 如果进度未完成，继续轮询
               setTimeout(() => this.updateProgress(queryParams), 1000);
             } else {
@@ -179,13 +174,19 @@
           .catch(error => {
             console.error('Error fetching progress:', error);
           });
-    },
-    startProcess(queryParams) {
-      // 开始处理或者轮询
-      this.updateProgress(queryParams);
-    }
-    },
-    components: {
+      },
+      startProcess(queryParams) {
+        // 开始处理或者轮询
+        this.updateProgress(queryParams);
+      },
+      HandleClose(){
+        // 运行界面关闭,并且一些值恢复到默认值
+        this.runDialogVisible = false;
+        this.runStatus = '正在运行中';  //模型运行的状态 （）
+        this.progress = 0; // 初始进度为 0
+        this.consoleOutput = ''
+        console.log("🚀 ~ HandleClose ~ this.consoleOutput :", this.consoleOutput )
+      },
     },
     computed: {
       ...mapState(['baseDataCollections','scenarioCollections']),
@@ -203,7 +204,7 @@
       
       closedialog(){
         this.createRunDialogVisible=false
-        this.consoleOutput = 'xxx'
+        this.consoleOutput = null
       },
     },
   }
