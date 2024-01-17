@@ -84,6 +84,32 @@ const actions = {
     //     console.log("🚀 ~ add_data_collection ~ collection:", collection)
     //     miniStore.commit('ADD_DATA_COLLECTION',collection);  
     // }
+    fetchImageUrls({ commit }) {
+        // 这里应该是从后端获取图片URLs的逻辑
+        // 假设我们从一个API获取URLs，可以是一个异步操作
+        fetch('http://localhost:5000/result/images')
+        .then(response => response.json())
+        .then(urls => {
+            commit('SET_IMAGE_URLS', urls);
+        })
+        .catch(error => {
+            console.error('Error fetching image URLs:', error);
+        });
+    },
+
+    async fetchMapData({ commit }) {
+        try {
+        // 使用axios或其他HTTP库从后端获取地理数据
+        const response = await axios.get('http://localhost:5000/runs/map.html');
+        const data = response.data;
+
+        // 调用mutation来更新地理数据
+        commit('SET_RUN_MAP_DATA', data);
+        console.log("🚀 ~ fetchMapData ~ data:", data)
+        } catch (error) {
+        console.error('Error fetching data:', error);
+        }
+  },
 
   };
 
@@ -187,8 +213,22 @@ const mutations = {
         state.scenarioCollections.push(collection)
         console.log("🚀 ~ ADD_SCENARIO ~ state.scenarioCollections:", state.scenarioCollections)
     },
-    
-
+    DELETE_SCENARIO(state,scenarioId){
+        // 删除数据合集
+        const deleteIndex = state.scenarioCollections.findIndex(item => item.id === scenarioId);
+        console.log("🚀 ~ DELETE_SCENARIO ~ deleteIndex:", deleteIndex)
+        state.scenarioCollections.splice(deleteIndex, 1);
+    },
+    // 后端返回图片url
+    SET_IMAGE_URLS(state, urls) {
+        state.imageUrls = urls;
+    },
+    // 
+    SET_RUN_MAP_DATA(state, data) {
+        state.runMapData = data;
+        // console.log("🚀 ~ SET_RUN_MAP_DATA ~ state.runMapData:", state.runMapData)
+      },
+      
   };
   
 const getters = {
@@ -202,6 +242,7 @@ const getters = {
 
 // 准备 state  功能， state 用于存储数据
 const state = {
+    imageUrls: [],  // 存储图片URLs的数组
     message:'hello world',
     uploadJobControlFileList : [],
     uploadHouseholdsControlFileList:[],
@@ -312,6 +353,7 @@ const state = {
             travelModelNetwork:null,
         },
     ],
+    runMapData:null,
 }
 
 // 浏览器存储
