@@ -87,14 +87,27 @@ const actions = {
     fetchImageUrls({ commit }) {
         // 这里应该是从后端获取图片URLs的逻辑
         // 假设我们从一个API获取URLs，可以是一个异步操作
-        fetch('http://localhost:5000/result/images')
-        .then(response => response.json())
-        .then(urls => {
-            commit('SET_IMAGE_URLS', urls);
-        })
-        .catch(error => {
-            console.error('Error fetching image URLs:', error);
-        });
+        // fetch('http://localhost:5000/result/images')
+        // .then(response => response.json())
+        // .then(urls => {
+        //     commit('SET_IMAGE_URLS', urls);
+        //     console.log("🚀 ~ fetchImageUrls ~ urls:", urls)
+        // })
+        // .catch(error => {
+        //     console.error('Error fetching image URLs:', error);
+        // });
+
+        fetch('http://localhost:5000/result/images?_=' + new Date().getTime())
+            .then(response => response.json())
+            .then(urls => {
+                // 更新URLs，每个URL后都添加时间戳
+                const updatedUrls = urls.map(url => url + "?_=" + new Date().getTime());
+                commit('SET_IMAGE_URLS', updatedUrls);
+                console.log("🚀 ~ fetchImageUrls ~ urls:", updatedUrls);
+            })
+            .catch(error => {
+                console.error('Error fetching image URLs:', error);
+            });
     },
 
     async fetchMapData({ commit }) {
@@ -222,6 +235,7 @@ const mutations = {
     // 后端返回图片url
     SET_IMAGE_URLS(state, urls) {
         state.imageUrls = urls;
+        console.log("🚀 ~ SET_IMAGE_URLS ~ state.imageurls:", state.imageurls)
     },
     // 
     SET_RUN_MAP_DATA(state, data) {
