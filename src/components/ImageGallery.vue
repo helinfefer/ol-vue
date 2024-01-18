@@ -5,17 +5,18 @@
 
         <div class="image-gallery">
             <div v-for="(url, index) in imageUrls" :key="index" class="image-container">
-                <el-image :src="url" fit="cover" ></el-image>
+                <el-image :src="url" fit="cover" :key="url"></el-image>
                 
                 <!-- 下载按钮 -->
                 <el-button type="text" icon="el-icon-download" @click="downloadImage(url)">下载</el-button>
             </div>
-            <iframe
+            <!-- <iframe
                 src="http://localhost:5000/runs/map_runs.html"
                 width=80%
                 height="500"
+                loading="lazy"
                 style="border:none;">
-            </iframe>
+            </iframe> -->
         </div>
 
     </div>
