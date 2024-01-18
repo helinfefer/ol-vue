@@ -37,10 +37,10 @@
         <el-col :span="8">
           <h2>运行步骤</h2>
           <el-form-item>
-          <span>结束年:</span> <el-input-number v-model="runFormData.end_year" controls-position="right" @change="handleChange" :min="2010" ></el-input-number>
+          <span>结束年:</span> <el-input-number v-model="runFormData.end_year" controls-position="right"  :min="2010" ></el-input-number>
           </el-form-item>
           <el-form-item>
-          <span>随机种子(可选):</span> <el-input-number v-model="runFormData.random_seed" controls-position="right" @change="handleChange" :min=0 ></el-input-number>
+          <span>随机种子(可选):</span> <el-input-number v-model="runFormData.random_seed" controls-position="right"  :min=0 ></el-input-number>
           </el-form-item>
           <el-form-item>
             <span>
@@ -96,7 +96,7 @@
   import { mapState} from 'vuex';
   import axios from 'axios';
   export default {
-    name: 'CreateRun',
+    name: 'CreatingNewSimulationRun',
     data() {
       return {
         createRunDialogVisible: false, 
@@ -110,20 +110,19 @@
         consoleOutput:'',
         runStatus: '正在运行中',  //模型运行的状态 （）
         progress: 0, // 初始进度为 0
+        progressInterval: null, // 用于存储定时器的标识
 
       };
     },
     components:{ImageGallery},
     methods: {
-      handleChange(value) {
-        console.log(value);
-      },
       startRun(){
+        
         console.log("🚀 ~ startRun ~ this.runFormData:", this.runFormData.selectedScenario[0])
         // 开始运行，打开运行界面，并关闭创建界面
         this.createRunDialogVisible=false;
         this.runDialogVisible=true;
-        this.progress = 0; // 初始进度为 0
+        this.resetProgress(); 
         // 发送数据到后端并进行运行
         //  构建传递到后端的参数
         // 1. 情景参数
@@ -156,6 +155,19 @@
       updateProgress(queryParams) {
         console.log("🚀 ~ updateProgress ~ queryParams:", queryParams)
         // 假设 '/progress' 路径返回当前进度
+        // 如果定时器尚未设置，则创建定时器
+        if (!this.progressInterval) {
+          this.progressInterval = setInterval(() => {
+            // 只在simulatedProgress小于80时增加
+            if (this.progress < 80) {
+              this.progress += 5;
+            } else {
+              // 达到80或以上时清除定时器
+              clearInterval(this.progressInterval);
+            }
+          }, 2000); // 每2秒增加一次
+        }
+        
         axios.get(`http://localhost:5000/progress?${queryParams}`).then(response => {
             // 假设响应的格式为 { progress: 30 }
             // 处理响应
@@ -165,7 +177,7 @@
             if (this.progress < 100) {
               console.log("🚀 ~ axios.get ~ this.progress:", this.progress)
               // 如果进度未完成，继续轮询
-              setTimeout(() => this.updateProgress(queryParams), 1000);
+              setTimeout(() => this.updateProgress(queryParams), 2000);
             } else {
               // 进度完成
               this.runStatus = '运行完成';
@@ -175,6 +187,7 @@
             console.error('Error fetching progress:', error);
           });
       },
+
       startProcess(queryParams) {
         // 开始处理或者轮询
         this.updateProgress(queryParams);
@@ -184,9 +197,20 @@
         this.runDialogVisible = false;
         this.runStatus = '正在运行中';  //模型运行的状态 （）
         this.progress = 0; // 初始进度为 0
-        this.consoleOutput = ''
-        console.log("🚀 ~ HandleClose ~ this.consoleOutput :", this.consoleOutput )
+        this.consoleOutput = 'running'
+        // console.log("🚀 ~ HandleClose ~ this.consoleOutput :", this.consoleOutput )
+        
       },
+      resetProgress() {
+        // 清除现有的定时器
+        if (this.progressInterval) {
+          clearInterval(this.progressInterval);
+          this.progressInterval = null;
+        }
+        // 重置进度
+        this.progress = 0;
+      },
+
     },
     computed: {
       ...mapState(['baseDataCollections','scenarioCollections']),
@@ -197,16 +221,8 @@
       // }
     },
     mounted:{
-      showFormData(){
-        console.log(this.runFormData),
-        this.createRunDialogVisible=false
-      },
-      
-      closedialog(){
-        this.createRunDialogVisible=false
-        this.consoleOutput = null
-      },
     },
+    
   }
   </script>
   
